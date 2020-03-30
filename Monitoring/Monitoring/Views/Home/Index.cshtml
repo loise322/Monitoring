@@ -1,71 +1,50 @@
-﻿@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Debug Tables</title>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-</head>
-<body>
-    <div>
-        <table class="table table-bordered table-dark">
-            <thead class="thead-dark">
+﻿<div>
+    <table class="table table-bordered table-dark">
+        <thead class="thead-dark">
+            <tr>
+                <td><p>Id</p></td>
+                <td><p>Name</p></td>
+                <td><p>Value</p></td>
+                <td><p>warningThreshold</p></td>
+                <td><p>alarmThreshold</p></td>
+                <td><p>Priority</p></td>
+            </tr>
+        </thead>
+        <tbody>
+           @foreach (var b in Model.Vocs)
+            {
                 <tr>
-                    <td><p>Id</p></td>
-                    <td><p>Name</p></td>
-                    <td><p>Value</p></td>
-                    <td><p>warningThreshold</p></td>
-                    <td><p>alarmThreshold</p></td>
-                    <td><p>Priority</p></td>
+                    <td><p>@b.Id</p></td>
+                    <td><p>@b.Name</p></td>
+                    <td><p>@Model.LastValueOfLogs</p></td>
+                    <td><p>@b.warningThreshold</p></td>
+                    <td><p>@b.alarmThreshold</p></td>
+                    <td><p>@b.Priority</p></td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var b in ViewBag.Vocs)
-                {
-                    <tr>
-                        <td><p>@b.Id</p></td>
-                        <td><p>@b.Name</p></td>
-                        <td><p>@ViewBag.Value</p></td>
-                        <td><p>@b.warningThreshold</p></td>
-                        <td><p>@b.alarmThreshold</p></td>
-                        <td><p>@b.Priority</p></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <h3>Logs</h3>
-        <table class="table table-bordered table-dark">
-            <thead class="thead-dark">
+            }
+        </tbody>
+    </table>
+    <h3>Logs</h3>
+    <table class="table table-bordered table-dark">
+        <thead class="thead-dark">
+            <tr>
+                <td><p>Id</p></td>
+                <td><p>Value</p></td>
+                <td><p>Date</p></td>
+            </tr>
+        </thead>
+        <tbody>
+           @foreach (var i in Model.Logs)
+            {
                 <tr>
-                    <td><p>Id</p></td>
-                    <td><p>Value</p></td>
-                    <td><p>Date</p></td>
+                    <td><p>@i.Id</p></td>
+                    <td><p>@i.Value</p></td>
+                    <td><p>@i.Date</p></td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var i in ViewBag.Logs)
-                {
-                    <tr>
-                        <td><p>@i.Id</p></td>
-                        <td><p>@i.Value</p></td>
-                        <td><p>@i.Date</p></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    @Html.ActionLink("Home", "Update");
-    <script type="text/javascript">
-        function() {
-        }
-    </script>
-</body>
-</html>
+            }
+        </tbody>
+    </table>
+</div> 
+@Html.ActionLink("AddNewValueInLogs", "Update");
+<script type="text/javascript">
+</script>

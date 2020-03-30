@@ -5,6 +5,7 @@ using System.Web;
 using Monitoring.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Monitoring.ViewModels;
 
 namespace Monitoring.Controllers
 {
@@ -18,13 +19,12 @@ namespace Monitoring.Controllers
         }
         public IActionResult Index()
         {
-            var vocs = _db.Vocs;
-            var logs = _db.Logs;
-            int value = (from i in _db.Logs select i.Value).ToList().Last();
-            ViewBag.Vocs = vocs;
-            ViewBag.Logs = logs;
-            ViewBag.Value = value.ToString();
-            return View();
+            VariableAndLogsViewModel VarAndLogsViewModel = new VariableAndLogsViewModel();
+            VarAndLogsViewModel.Vocs = _db.Vocs;
+            VarAndLogsViewModel.Logs = _db.Logs;
+            VarAndLogsViewModel.LastValueOfLogs = (from i in _db.Logs select i.Value).ToList().Last();
+            ViewBag.Title = "Monitoring";
+            return View(VarAndLogsViewModel);
         } 
         public IActionResult Update()
         {
