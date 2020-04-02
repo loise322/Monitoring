@@ -11,15 +11,15 @@
             </tr>
         </thead>
         <tbody>
-           @foreach (var b in Model.Vocs)
-            {
+           @foreach (var item in Model.Metrics)
+           {
                 <tr>
-                    <td><p>@b.Id</p></td>
-                    <td><p>@b.Name</p></td>
+                    <td><p>@item.Id</p></td>
+                    <td><p>@item.Name</p></td>
                     <td><p>@Model.LastValueOfLogs</p></td>
-                    <td><p>@b.warningThreshold</p></td>
-                    <td><p>@b.alarmThreshold</p></td>
-                    <td><p>@b.Priority</p></td>
+                    <td><p>@item.warningThreshold</p></td>
+                    <td><p>@item.alarmThreshold</p></td>
+                    <td><p>@item.Priority</p></td>
                 </tr>
             }
         </tbody>

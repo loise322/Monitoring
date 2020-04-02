@@ -20,7 +20,7 @@ namespace Monitoring.Controllers
         public IActionResult Index()
         {
             VariableAndLogsViewModel VarAndLogsViewModel = new VariableAndLogsViewModel();
-            VarAndLogsViewModel.Vocs = _db.Vocs;
+            VarAndLogsViewModel.Metrics = _db.Metrics;
             VarAndLogsViewModel.Logs = _db.Logs;
             VarAndLogsViewModel.LastValueOfLogs = (from i in _db.Logs select i.Value).ToList().Last();
             ViewBag.Title = "Monitoring";

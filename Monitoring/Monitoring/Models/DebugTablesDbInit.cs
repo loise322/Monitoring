@@ -8,11 +8,10 @@ namespace Monitoring
     {
         public static void Initialize(TableContext context)
         {
-            if (!context.Vocs.Any())
+            if (!context.Metrics.Any())
             {
-                context.Vocs.AddRange(
-                    new VocOfVariable { Name = "Name", isBoolean = false, warningThreshold = 5, alarmThreshold = 12, Priority = 1 }
-                    
+                context.Metrics.AddRange(
+                    new MetricItem { Name = "Name", isBoolean = false, warningThreshold = 5, alarmThreshold = 12, Priority = 1 }   
                 );
                 context.SaveChanges();
             }

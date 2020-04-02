@@ -10,6 +10,6 @@ namespace Monitoring.ViewModels
     {
         public int LastValueOfLogs { get; set; }
         public IEnumerable<LogObject> Logs { get; set; }
-        public IEnumerable<VocOfVariable> Vocs { get; set; }
+        public IEnumerable<MetricItem> Metrics { get; set; }
     }
 }

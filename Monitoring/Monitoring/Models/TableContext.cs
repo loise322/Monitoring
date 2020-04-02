@@ -9,7 +9,7 @@ namespace Monitoring.Models
     public class TableContext : DbContext
     {
         public DbSet<LogObject> Logs { get; set; }
-        public DbSet<VocOfVariable> Vocs { get; set; }
+        public DbSet<MetricItem> Metrics { get; set; }
 
         public TableContext(DbContextOptions<TableContext> options)
             : base(options)

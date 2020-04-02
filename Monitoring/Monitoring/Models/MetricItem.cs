@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Monitoring.Models
 {
-    public class VocOfVariable
+    public class MetricItem
     {
         public int Id { get; set; }
         public string Name { get; set; }
