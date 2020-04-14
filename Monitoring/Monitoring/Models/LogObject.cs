@@ -9,6 +9,7 @@ namespace Monitoring.Models
     {
         public int Id { get; set; }
         public int Value { get; set; }
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
+        public int MetricId { get; set; }
     }
 }

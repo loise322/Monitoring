@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
-namespace Monitoring.Models
+namespace Monitoring.ViewModels
 {
-    public class MetricItem
+    public class TestDataJson
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public bool IsBoolean { get; set; }
         public int WarningThreshold { get; set; }
         public int AlarmThreshold { get; set; }
         public int Priority { get; set; }
         public string Kind { get; set; }
+        public int Value { get; set; }
     }
 }
