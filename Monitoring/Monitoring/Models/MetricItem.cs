@@ -12,7 +12,7 @@ namespace Monitoring.Models
         public bool IsBoolean { get; set; }
         public int WarningThreshold { get; set; }
         public int AlarmThreshold { get; set; }
-        public int Priority { get; set; }
+        public PriorityClass Priority { get; set; }
         public string Kind { get; set; }
     }
 }

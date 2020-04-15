@@ -37,11 +37,12 @@ namespace Monitoring.Controllers
             Random rnd = new Random();
             List<TestDataJson> testDataJson = new List<TestDataJson>
             {
-                new TestDataJson { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = 0, Kind = "Kind0", Value = rnd.Next(0, 150) },
-                new TestDataJson { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = 1, Kind = "Kind0", Value = rnd.Next(0, 120) },
-                new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = 1, Kind = "Kind0", Value = rnd.Next(0, 30) }
+                new TestDataJson { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = PriorityClass.Medium, Kind = "Kind3", Value = rnd.Next(0, 150) },
+                new TestDataJson { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = PriorityClass.High, Kind = "Kind2", Value = rnd.Next(0, 120) },
+                new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityClass.Low, Kind = "Kind1", Value = rnd.Next(0, 30) },
+                new TestDataJson { Name = "Name4", IsBoolean = false, WarningThreshold = 20, AlarmThreshold = 30, Priority = PriorityClass.High, Kind = "Kind4", Value = rnd.Next(0, 40) }
             };
-            return Json(testDataJson[rnd.Next(0, 3)]);
+            return Json(testDataJson[rnd.Next(0, 4)]);
         }
 
         [HttpPost]

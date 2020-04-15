@@ -11,9 +11,9 @@ namespace Monitoring
             if (!context.Metrics.Any())
             {
                 context.Metrics.AddRange(
-                    new MetricItem { Name = "Name", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = 1, Kind = "Kind"  },   
-                    new MetricItem { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = 0, Kind = "Kind2" },
-                    new MetricItem { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = 2, Kind = "Kind3" }
+                    new MetricItem { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityClass.Low, Kind = "Kind1"  },   
+                    new MetricItem { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = PriorityClass.High, Kind = "Kind2" },
+                    new MetricItem { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = PriorityClass.Medium, Kind = "Kind3" }
                 );
                 context.SaveChanges();
             }
