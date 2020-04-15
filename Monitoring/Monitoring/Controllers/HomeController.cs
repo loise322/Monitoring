@@ -42,39 +42,54 @@ namespace Monitoring.Controllers
                 new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityClass.Low, Kind = "Kind1", Value = rnd.Next(0, 30) },
                 new TestDataJson { Name = "Name4", IsBoolean = false, WarningThreshold = 20, AlarmThreshold = 30, Priority = PriorityClass.High, Kind = "Kind4", Value = rnd.Next(0, 40) }
             };
-            return Json(testDataJson[rnd.Next(0, 4)]);
+            return Json(testDataJson[rnd.Next(0,4)]);
         }
 
         [HttpPost]
         public IActionResult ProcessData([FromBody]JsonElement JsonData)
         {
             TestDataJson Data = JsonConvert.DeserializeObject<TestDataJson>(JsonData.ToString());
-            LogObject NewLog = new LogObject();
-            List<string> ListOfKinds = (from i in _db.Metrics select i.Kind).ToList();
-            try
+            List<string> ListOfKind = (from i in _db.Metrics select i.Kind).ToList();
+            bool contains = ListOfKind.Contains(Data.Kind);
+            if (contains == true)
             {
+                LogObject NewLog = new LogObject();
+                var AcceptedKind = from i in _db.Metrics
+                                   where i.Kind == Data.Kind
+                                   select i.Kind;
                 var AcceptedMetricId = from i in _db.Metrics
                                        where i.Kind == Data.Kind
                                        select i.Id;
                 NewLog.MetricId = AcceptedMetricId.First();
-                foreach (var Kind in ListOfKinds.Where(i => i == Data.Kind))
-                {
-                    if (Kind == Data.Kind)
-                    {
-                        NewLog.Date = DateTime.Now;
-                        NewLog.Value = Data.Value;
-                        _db.Logs.Add(NewLog);
-                        _db.SaveChanges();
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
+                NewLog.Date = DateTime.Now;
+                NewLog.Value = Data.Value;
+                _db.Logs.Add(NewLog);
+                _db.SaveChanges();
+                logger.Info($"Log saved! ({Data.Kind})");
+                return Ok($"Log saved! ({Data.Kind})");
+            }           
+            if (contains == false)
             {
-                logger.Info(ex.Message);
-                return Ok(ex.Message);
+                MetricItem NewMetric = new MetricItem
+                {
+                    Name = "",
+                    IsBoolean = Data.IsBoolean,
+                    WarningThreshold = Data.WarningThreshold,
+                    AlarmThreshold = Data.AlarmThreshold,
+                    Priority = Data.Priority,
+                    Kind = Data.Kind
+                };
+                LogObject NewLog = new LogObject();
+                NewLog.MetricId = (from i in _db.Metrics select i.Id).ToList().Last() + 1;
+                NewLog.Date = DateTime.Now;
+                NewLog.Value = Data.Value;
+                _db.Metrics.Add(NewMetric);
+                _db.Logs.Add(NewLog);
+                _db.SaveChanges();
+                logger.Info($"New metric created and it's log saved! ({Data.Kind})");
+                return Ok($"New metric created and it's log saved! ({Data.Kind})");
             }
-            return Ok("Logs saved!");
+            return Ok("");
         }
     }
 }

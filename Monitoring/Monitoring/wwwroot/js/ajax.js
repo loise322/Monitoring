@@ -108,7 +108,7 @@ $(document).ready(function ($) {
             type: 'GET',
             url: 'Home/AcceptRequest',
             dataType: 'json',
-            timeout: 10000,
+            timeout: 5000,
             success: function (data) {
                 var globalState = 0;
                 $.each(data.metrics, function (index, item) {
@@ -123,7 +123,7 @@ $(document).ready(function ($) {
                 lastUpdateTimestamp = new Date();
                 $('#footer').text('Данные от ' + lastUpdateTimestamp.toLocaleString()).removeClass('error');
                 lastGlobalState = globalState;
-                setTimeout(processJson, 10000);
+                setTimeout(processJson, 5000);
             },
             error: function () {
                 var errorText = 'Ошибка обновления данных';
@@ -131,7 +131,7 @@ $(document).ready(function ($) {
                     errorText += ', последние данные от ' + lastUpdateTimestamp.toLocaleString();
                 }
                 $('#footer').text(errorText).addClass('error');
-                setTimeout(processJson, 10000);
+                setTimeout(processJson, 5000);
             }
         });
     };
