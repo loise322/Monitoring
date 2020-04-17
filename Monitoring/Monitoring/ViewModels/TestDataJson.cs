@@ -12,7 +12,7 @@ namespace Monitoring.ViewModels
         public bool IsBoolean { get; set; }
         public int WarningThreshold { get; set; }
         public int AlarmThreshold { get; set; }
-        public PriorityClass Priority { get; set; }
+        public PriorityKind Priority { get; set; }
         public string Kind { get; set; }
         public int Value { get; set; }
     }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Monitoring.Models
 {
-    public enum PriorityClass
+    public enum PriorityKind
     {
         High, Medium, Low
     }
