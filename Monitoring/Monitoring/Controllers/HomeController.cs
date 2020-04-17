@@ -24,10 +24,12 @@ namespace Monitoring.Controllers
         }
         public IActionResult Index()
         {
-            //VariableAndLogsViewModel VarAndLogsViewModel = new VariableAndLogsViewModel();
-            //VarAndLogsViewModel.Metrics = _db.Metrics;
-            //VarAndLogsViewModel.Logs = _db.Logs;
-            //VarAndLogsViewModel.LastValueOfLogs = (from i in _db.Logs select i.Value).ToList().Last();
+            //VariableAndLogsViewModel VarAndLogsViewModel = new VariableAndLogsViewModel
+            //{
+            //    Metrics = _db.Metrics,
+            //    Logs = _db.Logs,
+            //    LastValueOfLogs = (from i in _db.Logs select i.Value).ToList().Last()
+            //};
             ViewBag.Title = "Monitoring";
             return View();
         }
@@ -49,14 +51,9 @@ namespace Monitoring.Controllers
         public IActionResult ProcessData([FromBody]JsonElement JsonData)
         {
             TestDataJson Data = JsonConvert.DeserializeObject<TestDataJson>(JsonData.ToString());
-            List<string> ListOfKind = (from i in _db.Metrics select i.Kind).ToList();
-            bool contains = ListOfKind.Contains(Data.Kind);
-            if (contains == true)
+            if (_db.Metrics.Any() && (from i in _db.Metrics select i.Kind).ToList().Contains(Data.Kind))
             {
                 LogObject NewLog = new LogObject();
-                var AcceptedKind = from i in _db.Metrics
-                                   where i.Kind == Data.Kind
-                                   select i.Kind;
                 var AcceptedMetricId = from i in _db.Metrics
                                        where i.Kind == Data.Kind
                                        select i.Id;
@@ -67,8 +64,8 @@ namespace Monitoring.Controllers
                 _db.SaveChanges();
                 logger.Info($"Log saved! ({Data.Kind})");
                 return Ok($"Log saved! ({Data.Kind})");
-            }           
-            if (contains == false)
+            }
+            if ((!_db.Metrics.Any()) || (_db.Metrics.Any() && !(from i in _db.Metrics select i.Kind).ToList().Contains(Data.Kind)))
             {
                 MetricItem NewMetric = new MetricItem
                 {
@@ -79,15 +76,18 @@ namespace Monitoring.Controllers
                     Priority = Data.Priority,
                     Kind = Data.Kind
                 };
-                LogObject NewLog = new LogObject();
-                NewLog.MetricId = (from i in _db.Metrics select i.Id).ToList().Last() + 1;
-                NewLog.Date = DateTime.Now;
-                NewLog.Value = Data.Value;
                 _db.Metrics.Add(NewMetric);
+                _db.SaveChanges();
+                LogObject NewLog = new LogObject
+                {
+                    MetricId = (from i in _db.Metrics select i.Id).ToList().Last(),
+                    Date = DateTime.Now,
+                    Value = Data.Value
+                };
                 _db.Logs.Add(NewLog);
                 _db.SaveChanges();
-                logger.Info($"New metric created and it's log saved! ({Data.Kind})");
-                return Ok($"New metric created and it's log saved! ({Data.Kind})");
+                logger.Info($"New metric created and that metric's log saved! ({Data.Kind})");
+                return Ok($"New metric created and that metric's log saved! ({Data.Kind})");
             }
             return Ok("");
         }
