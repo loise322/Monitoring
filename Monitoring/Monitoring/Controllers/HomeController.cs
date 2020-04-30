@@ -28,6 +28,87 @@ namespace Monitoring.Controllers
             return View();
         }
 
+        public IActionResult Metrics()
+        {
+            ViewBag.Title = "Monitoring";
+            MetricsModel Model = new MetricsModel();
+            Model.Metrics = _db.Metrics.ToList();
+            return View(Model);
+        }
+        public IActionResult Edit(int id)
+        {
+            ViewBag.Title = "Monitoring";
+            if ((from i in _db.Metrics select i.Id).ToList().Contains(id))
+            {
+                MetricItem Metric = new MetricItem();
+                Metric = (from i in _db.Metrics where i.Id == id select i).First();
+                EditMetricModel MetricModel = new EditMetricModel
+                {
+                    Id = Metric.Id,
+                    Name = Metric.Name,
+                    IsBoolean = Metric.IsBoolean,
+                    AlarmThreshold = Metric.AlarmThreshold,
+                    WarningThreshold = Metric.WarningThreshold,
+                    Priority = Metric.Priority,
+                    Kind = Metric.Kind,
+                    CheckContain = true
+                };
+                return View(MetricModel);
+            }
+            else
+            {
+                EditMetricModel MetricModel = new EditMetricModel
+                {
+                    CheckContain = false
+                };
+                return View(MetricModel);
+            }
+        }
+        [HttpPost]
+        public IActionResult EditMetric([FromBody]JsonElement Data)
+        {
+            MetricItem DataForEdit = JsonConvert.DeserializeObject<MetricItem>(Data.ToString());
+            var MetricForEdit = _db.Metrics
+                           .Where(i => i.Id == DataForEdit.Id)
+                           .FirstOrDefault();
+            MetricForEdit.Name = DataForEdit.Name;
+            MetricForEdit.IsBoolean = DataForEdit.IsBoolean;
+            MetricForEdit.AlarmThreshold = DataForEdit.AlarmThreshold;
+            MetricForEdit.WarningThreshold = DataForEdit.WarningThreshold;
+            MetricForEdit.Priority = DataForEdit.Priority;
+            MetricForEdit.Kind = DataForEdit.Kind;
+            _db.SaveChanges();
+            logger.Info("Changes saved!");
+            return Ok();
+        }
+
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddMetric([FromBody]JsonElement Data)
+        {
+            MetricItem DataForAdd = JsonConvert.DeserializeObject<MetricItem>(Data.ToString());
+            _db.Metrics.Add(DataForAdd);
+            _db.SaveChanges();
+            return Ok();
+        }
+        public IActionResult Delete(int id)
+        {
+            if ((from i in _db.Metrics select i.Id).ToList().Contains(id))
+            {
+                MetricItem Metric = new MetricItem
+                {
+                    Id = id
+                };
+                _db.Metrics.Attach(Metric);
+                _db.Metrics.Remove(Metric);
+                _db.SaveChanges();
+            }
+            return Redirect("/Home/Metrics");
+        }
         public IActionResult AcceptRequest()
         {
             Random rnd = new Random();
@@ -58,7 +139,7 @@ namespace Monitoring.Controllers
                 logger.Info($"Log saved! ({Data.Kind})");
                 return Ok($"Log saved! ({Data.Kind})");
             }
-            else 
+            else
             {
                 MetricItem NewMetric = new MetricItem
                 {

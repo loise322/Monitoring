@@ -6,10 +6,8 @@ using Monitoring.Models;
 
 namespace Monitoring.ViewModels
 {
-    public class VariableAndLogsViewModel
+    public class MetricsModel
     {
-        public int LastValueOfLogs { get; set; }
-        public IEnumerable<LogObject> Logs { get; set; }
         public IEnumerable<MetricItem> Metrics { get; set; }
     }
 }

@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+
+@model EditMetricModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <script src="~/js/AddMetric.js" type="text/javascript"></script>
+    <p>Добавьте метрику:</p>
+    <p>Name: <input type="text" class="form-control" id="addNameInput"></p>
+    <p>
+        IsBoolean:
+        <select id="addIsBooleanInput">
+            <option value="true">True</option>
+            <option value="false">False</option>
+        </select>
+    </p>
+    <p>WarningThreshold: <input type="text" class="form-control" id="addWarningThresholdInput"></p>
+    <p>AlarmThreshold: <input type="text" class="form-control" id="addAlarmThresholdInput"></p>
+    <p>
+        Priority:
+        <select id="addPriorityInput">
+            <option value="2">Low</option>
+            <option value="1">Medium</option>
+            <option value="0">High</option>
+        </select>
+    </p>
+    <p>Kind: <input type="text" class="form-control" id="addKindInput"></p>
+    <input type="button" onclick="processAdd()" value="Add">
+    @Html.ActionLink("Back", "Metrics", "Home")
+
+</body>
+</html>
