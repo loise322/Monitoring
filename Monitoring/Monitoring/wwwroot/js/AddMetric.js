@@ -17,5 +17,7 @@
     if (response.ok) {
         alert("Metric added!");
         document.location.href = 'http://localhost:3000/Home/Metrics'
+    } else {
+        alert("Ошибка HTTP: " + response.status);
     }
 };

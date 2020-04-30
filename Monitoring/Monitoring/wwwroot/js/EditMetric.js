@@ -19,5 +19,7 @@ async function processEdit() {
     if (response.ok) {
         alert("Changes saved!");
         document.location.href = 'http://localhost:3000/Home/Metrics'
+    } else {
+        alert("Ошибка HTTP: " + response.status);
     }
 };
