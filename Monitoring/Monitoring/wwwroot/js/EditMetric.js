@@ -1,7 +1,7 @@
 ﻿
 async function processEdit() {
     var item = {
-        id: Number(document.getElementById('addIdInput').value),
+        id: document.getElementById('editIdInput').value,
         Name: document.getElementById('editNameInput').value,
         IsBoolean: document.getElementById('editIsBooleanInput').value,
         WarningThreshold: Number(document.getElementById('editWarningThresholdInput').value),
@@ -20,6 +20,20 @@ async function processEdit() {
         alert("Changes saved!");
         document.location.href = 'http://localhost:3000/Home/Metrics'
     } else {
-        alert("Ошибка HTTP: " + response.status);
+        if (response.status == "400") {
+            let json = await response.json();
+            let text = "Ошибка валидации!\r\n";
+            for (let i = 0; i < json.length; i++) {
+                text = text + json[i] + "\r\n";
+            }
+            alert(text);
+        } else {
+            if (response.status == "500") {
+                let text = await response.text();
+                alert(text);
+            } else {
+                alert("Ошибка HTTP: " + response.status);
+            }
+        }
     }
 };

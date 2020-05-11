@@ -80,18 +80,18 @@ html, body
 }
 
 #footer {
-	height: 24px;
-	width: 100%;
-	display: block;
-	position: absolute;
-	bottom: 0;
-	background-color: #f2fbfc;
-	padding-top: 5px;
-	text-align: center;
-	font-family: Arial;
-	font-size: 18px;
-	color: black;
-	border-top: 5px solid #45507a;
+    height: 24px;
+    width: 100%;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    background-color: #f2fbfc;
+    padding-top: 5px;
+    text-align: center;
+    font-family: Arial;
+    font-size: 18px;
+    color: black;
+    border-top: 5px solid #45507a;
 }
 
 #footer.error {

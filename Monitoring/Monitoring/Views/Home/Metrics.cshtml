@@ -41,6 +41,7 @@
                 <td>@i.AlarmThreshold</td>
                 <td>@i.Priority</td>
                 <td>@i.Kind</td>
+                <td>@Html.ActionLink("Graphic", "Graphic", "Home", new { id = i.Id })</td>
                 <td>@Html.ActionLink("Edit", "Edit", "Home", new { id = i.Id })</td>
                 <td>@Html.ActionLink("Delete", "Delete", "Home", new { id = i.Id })</td>
             </tr>

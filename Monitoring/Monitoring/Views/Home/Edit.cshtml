@@ -16,7 +16,7 @@
 </head>
 <body>
     <script src="~/js/EditMetric.js" type="text/javascript"></script>
-    @if (Model.CheckContain == true)
+    @if (Model != null)
     {
         <p>Текущая метрика для редактирования:</p>
         <table>
@@ -43,15 +43,15 @@
                 <td>@Model.Priority</td>
                 <td>@Model.Kind</td>
             </tr>
-        </table>
+        </table>       
         <input type="hidden" id="editIdInput" value="@Model.Id" />
-        <p>Name: <input type="text" class="form-control" id="editNameInput"></p>
+        <p>Name: <input type="text"  class="form-control" id="editNameInput"></p>
         <p>
             IsBoolean:
             <select id="editIsBooleanInput">
                 <option value="true">True</option>
                 <option value="false">False</option>
-            </select>
+                </select>
         </p>
         <p>WarningThreshold: <input type="text" class="form-control" id="editWarningThresholdInput"></p>
         <p>AlarmThreshold: <input type="text" class="form-control" id="editAlarmThresholdInput"></p>
@@ -66,10 +66,10 @@
         <p>Kind: <input type="text" class="form-control" id="editKindInput"></p>
         <input type="button" onclick="processEdit()" value="Edit">
         @Html.ActionLink("Back", "Metrics", "Home")
-     }
+         }
      else
      {
         <p>Метрики с данным идентификатором не существует!</p>
      }
-</body>
+    </body>
 </html>

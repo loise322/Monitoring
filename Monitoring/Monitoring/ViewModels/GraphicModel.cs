@@ -9,11 +9,13 @@ namespace Monitoring.ViewModels
     /// <summary>
     /// Используется для передачи данных в представление.
     /// </summary>
-    public class MetricsModel
+    public class GraphicModel
     {
         /// <summary>
-        /// Список метрик.
+        /// Идентификатор метрики.
         /// </summary>
-        public IEnumerable<MetricItem> Metrics { get; set; }
+        public int MetricId { get; set; }
+        public IEnumerable<int> Values { get; set; }
+        public IEnumerable<int> Labels { get; set; }
     }
 }
