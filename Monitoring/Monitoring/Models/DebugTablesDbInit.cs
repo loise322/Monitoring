@@ -10,10 +10,10 @@ namespace Monitoring
     public static class DebugTablesDbInit
     {
         /// <summary>
-        /// Метод класса DebugTablesDbInit используется для добавления  объектов в базу данных при первом обращении к ней.
-        /// Для добавления объектов в базу данннах в метод Initialize() передается контекст данных. 
+        /// Добавления  объектов в базу данных при первом обращении к ней.
+        /// Для добавления объектов в базу данных в метод Initialize() передается контекст данных. 
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">Контекст данных</param>
         public static void Initialize(TableContext context)
         {
             

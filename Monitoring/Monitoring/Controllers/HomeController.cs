@@ -10,7 +10,7 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using NLog;
-using Monitoring.ValidatorRepository;
+using Monitoring.Validators;
 using Monitoring.Classes;
 
 namespace Monitoring.Controllers
@@ -20,12 +20,14 @@ namespace Monitoring.Controllers
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         TableContext _db;
+
         public HomeController(TableContext context)
         {
             _db = context;
         }
+
         /// <summary>
-        /// Метод Index() используется для отображения представления Index. 
+        /// Отображение представления Index. 
         /// </summary>
         /// <returns>Возвращает представление Index.</returns>
         public IActionResult Index()
@@ -33,27 +35,30 @@ namespace Monitoring.Controllers
             ViewBag.Title = "Monitoring";
             return View();
         }
+
         /// <summary>
-        /// Метод Metrics() используется для отображения представления Metrics со списком всех метрик, которые есть в базе данных 
+        /// Отображение представления Metrics со списком всех метрик, которые есть в базе данных. 
         /// </summary>
-        /// <returns>Возвращает представление Metrics со списком всех метрик, которые есть в базе данных </returns>
+        /// <returns>Возвращает представление Metrics со списком всех метрик, которые есть в базе данных.</returns>
         public IActionResult Metrics()
         {
             ViewBag.Title = "Monitoring";
-            MetricsModel Model = new MetricsModel();
-            Model.Metrics = _db.Metrics.ToList();
+            MetricsModel Model = new MetricsModel
+            {
+                Metrics = _db.Metrics.ToList()
+            };
             return View(Model);
         }
+
         /// <summary>
-        /// Метод Edit() используется для отображения представления Edit с метрикой, которую редактируем.
+        /// Отображение представления Edit с метрикой, которую редактируем.
         /// </summary>
-        /// <param name="id">Аргумент метода Edit(). Указывает на метрику, которую редактируем.</param>
-        /// <returns>Возвращает представление с метрикой, которую редактируем</returns>
+        /// <param name="id">Указывает на метрику, которую редактируем.</param>
+        /// <returns>Возвращает представление с метрикой, которую редактируем.</returns>
         public IActionResult Edit(int id)
         {
             ViewBag.Title = "Monitoring";
-            MetricItem Metric = new MetricItem();  
-            Metric = _db.Metrics.Where(i => i.Id == id).FirstOrDefault();
+            MetricItem Metric = _db.Metrics.FirstOrDefault(i => i.Id == id);
             if (Metric != null)
             {
                 EditMetricModel MetricModel = new EditMetricModel
@@ -68,25 +73,24 @@ namespace Monitoring.Controllers
                 };
                 return View(MetricModel);
             }
-            else
-            {
-                return View();
-            }
+            return View();
         }
+
         /// <summary>
-        /// Метод EditMetric() используется для редактирование метрик в базе данных.
+        /// Редактирование метрик в базе данных.
         /// </summary>
-        /// <param name="Data">Аргумент метода AddMetric(). JSON данные.</param>
-        /// <returns>Возвращает коды состояния и ошибки, которые произошли при валидации</returns>
+        /// <param name="Data">Принятые JSON данные из представления.</param>
+        /// <returns>Возвращает коды состояния или ошибки, которые произошли при валидации</returns>
         [HttpPost]
         public IActionResult EditMetric([FromBody]JsonElement Data)
         {
-            Validator validator = new Validator();
-            var DataForEdit = validator.DeserializationMetric(Data);
+            StringValidator stringValidator = new StringValidator();
+            JsonConverters jsonConverters = new JsonConverters();
+            var DataForEdit = jsonConverters.DeserializeMetric(Data);
             if (DataForEdit != null)
             {
-                var MetricForEdit = _db.Metrics.Where(i => i.Id == DataForEdit.Id).FirstOrDefault();
-                var ValidationErrors = validator.StringsValidation(DataForEdit.Name, DataForEdit.Kind);
+                var MetricForEdit = _db.Metrics.FirstOrDefault(i => i.Id == DataForEdit.Id);
+                var ValidationErrors = stringValidator.ValidateStrings(DataForEdit.Name, DataForEdit.Kind);
                 if (ValidationErrors.Count() == 0)
                 {
                     MetricForEdit.Name = DataForEdit.Name;
@@ -101,35 +105,40 @@ namespace Monitoring.Controllers
                 }
                 else
                 {
-                    return BadRequest(JsonConvert.SerializeObject(ValidationErrors.ToList()));
+                    var ValidationErrorsToJson = jsonConverters.SerializeErrors(ValidationErrors.ToList());
+                    if (ValidationErrorsToJson != null)
+                    {
+                        return BadRequest(ValidationErrorsToJson);
+                    }
+                    return StatusCode(500, "Произошла ошибка при сериализации ошибок валидатора!");
                 }
             }
-            else
-            {
-                return StatusCode(500, "Произошла ошибка при сериализации");
-            }
+            return StatusCode(500, "Произошла ошибка при десериализации");
         }
+
         /// <summary>
-        /// Метод Add() используется для отображения представления Add.
+        /// Отображения представления Add.
         /// </summary>
-        /// <returns>Возвращаент представление Add</returns>
+        /// <returns>Возвращает представление Add.</returns>
         public IActionResult Add()
         {
             return View();
         }
+
         /// <summary>
-        /// Метод AddMetric() используется для добавления метрик в базу данных.
+        /// Добавление метрик в базу данных.
         /// </summary>
-        /// <param name="Data">Аргумент метода AddMetric(). JSON данные.</param>
-        /// <returns>Возвращает коды состояния и ошибки, которые произошли при валидации</returns>
+        /// <param name="Data">Принятые JSON данные из представления.</param>
+        /// <returns>Возвращает коды состояния или ошибки, которые произошли при валидации</returns>
         [HttpPost]
         public IActionResult AddMetric([FromBody]JsonElement Data)
         {
-            Validator validator = new Validator();
-            var DataForAdd = validator.DeserializationMetric(Data);
+            StringValidator stringValidator = new StringValidator();
+            JsonConverters jsonConverters = new JsonConverters();
+            var DataForAdd = jsonConverters.DeserializeMetric(Data);
             if (DataForAdd != null)
             {
-                var ValidationErrors = validator.StringsValidation(DataForAdd.Name, DataForAdd.Kind);
+                var ValidationErrors = stringValidator.ValidateStrings(DataForAdd.Name, DataForAdd.Kind);
                 if (ValidationErrors.Count() == 0)
                 {
                     _db.Metrics.Add(DataForAdd);
@@ -139,18 +148,21 @@ namespace Monitoring.Controllers
                 }
                 else
                 {
-                    return BadRequest(JsonConvert.SerializeObject(ValidationErrors.ToList()));
+                    var ValidationErrorsToJson = jsonConverters.SerializeErrors(ValidationErrors.ToList());
+                    if (ValidationErrorsToJson != null)
+                    {
+                        return BadRequest(ValidationErrorsToJson);
+                    }
+                    return StatusCode(500, "Произошла ошибка при сериализации ошибок валидатора!");
                 }
             }
-            else
-            {
-                return StatusCode(500, "Произошла ошибка при сериализации");
-            }
+            return StatusCode(500, "Произошла ошибка при десериализации данных!");
         }
+
         /// <summary>
-        /// Метод Delete() используется для удаление метрик из базы данных
+        /// Удаление метрик из базы данных
         /// </summary>
-        /// <param name="id">Аргумент метода Delete(). Указывает на метрику, которую нужно удалить.</param>
+        /// <param name="id">Указывает на метрику, которую нужно удалить.</param>
         public IActionResult Delete(int id)
         {
             if (_db.Metrics.Select(i => i.Id).Contains(id))
@@ -165,45 +177,47 @@ namespace Monitoring.Controllers
             }
             return Redirect("/Home/Metrics");
         }
+
         /// <summary>
-        /// Метод Graphic() используется для отображения представления Graphic.
+        /// Отображение представления Graphic.
         /// </summary>
-        /// <param name="id">Аргумент метода Graphic(). Указывает на метрику, график которой нужно построить</param>
+        /// <param name="id">Указывает на метрику, график которой нужно построить</param>
         /// <returns>Возвращает представление Graphic</returns>
         public IActionResult Graphic(int id)
         {
             return View(new GraphicModel { MetricId = id });
         }
+
         /// <summary>
-        /// Метод DataForGraphic() используется для отправки данных, с помощью которые строится график.
+        /// Отправки данных, с помощью которые строится график.
         /// </summary>
-        /// <param name="id">Аргумент метода DataForGraphic(). Указывает на метрику, график которой нужно построить</param>
+        /// <param name="id">Указывает на метрику, график которой нужно построить</param>
         /// <returns>Возвращает JSON массив данных</returns>
         [HttpGet]
         public IActionResult DataForGraphic(int id)
         {
             var AllValues = _db.Logs.Where(i => i.MetricId == id).Select(i => i.Value).ToList();
-            const int MaxQuantity = 50;
-            MethodsForGraphic methodsForGraphic = new MethodsForGraphic();
+            const int MaxLength = 50;
             GraphicModel graphicModel = new GraphicModel();
-            if (AllValues.Count() > MaxQuantity)
+            if (AllValues.Count() > MaxLength)
             {
                
-                graphicModel.Values = AllValues.TakeLast(MaxQuantity);
-                graphicModel.Labels = methodsForGraphic.FillLabels(MaxQuantity);
+                graphicModel.Values = AllValues.TakeLast(MaxLength);
+                graphicModel.Labels = FillGraphicLabels(MaxLength);
                 return Json(graphicModel);
             }
             else
             {
                 graphicModel.Values = AllValues.TakeLast(AllValues.Count());
-                graphicModel.Labels = methodsForGraphic.FillLabels(AllValues.Count());
+                graphicModel.Labels = FillGraphicLabels(AllValues.Count());
                 return Json(graphicModel);
             }    
         }
+
         /// <summary>
-        /// Метод AcceptRequest() используется как источник данных для тестирования программы.
+        /// Источник данных для тестирования программы.
         /// </summary>
-        /// <returns>Возвращает JSON данные в виде Name = string, IsBoolean = bool, WarningThreshold = int, AlarmThreshold = int, Priority = enum, Kind = string, Value = int</returns>
+        /// <returns>Возвращает JSON данные в представление</returns>
         public IActionResult AcceptRequest()
         {
             Random rnd = new Random();
@@ -229,17 +243,18 @@ namespace Monitoring.Controllers
                 return Json(testDataJson[rnd.Next(0, 4)]);
             }
         }
+
         /// <summary>
-        /// Метод ProcessData() используется для обработки принятых данных. Вследствие чего, добавляются новые метрики,
+        /// Обработка принятых данных. Вследствие чего, добавляются новые метрики,
         /// которых нет в базе данных и добавляются логи в базу данных, если метрика уже существовала в базе даннах.
         /// </summary>
-        /// <param name="JsonData">Аргумент метода ProcessData(). JSON данные.</param>
+        /// <param name="JsonData">Принятые JSON данные из представления.</param>
         /// <returns>Возвращает код состояния.</returns>
         [HttpPost]
         public IActionResult ProcessData([FromBody]JsonElement JsonData)
         {
-            Validator validator = new Validator();
-            var Data = validator.DeserializationRequest(JsonData);
+            JsonConverters jsonConverters = new JsonConverters();
+            var Data = jsonConverters.DeserializeTestData(JsonData);
             if (Data != null)
             {
                 if (_db.Metrics.Select(i => i.Kind).Contains(Data.Kind))
@@ -280,10 +295,22 @@ namespace Monitoring.Controllers
                     return Ok($"New metric created and that metric's log saved! ({Data.Kind})");
                 }
             }
-            else
+            return StatusCode(500, "Произошла ошибка при десериализации");
+        }
+
+        /// <summary>
+        /// Заполнение ярлыков для графика.
+        /// </summary>
+        /// <param name="ConditionValue">Устанавливает кол-во ярлыков.</param>
+        /// <returns>Возвращает список ярлыков</returns>       
+        private List<int> FillGraphicLabels(int ConditionValue)
+        {
+            List<int> labels = new List<int>();
+            for (int i = 0; i < ConditionValue; i++)
             {
-                return StatusCode(500, "Произошла ошибка при сериализации");
-            }
+                labels.Add(i + 1);
+            };
+            return labels;
         }
     }
 }
