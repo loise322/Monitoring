@@ -105,7 +105,7 @@ namespace Monitoring.Controllers
                 }
                 else
                 {
-                    var ValidationErrorsToJson = jsonConverters.SerializeErrors(ValidationErrors.ToList());
+                    var ValidationErrorsToJson = jsonConverters.SerializeStrings(ValidationErrors.ToList());
                     if (ValidationErrorsToJson != null)
                     {
                         return BadRequest(ValidationErrorsToJson);
@@ -148,7 +148,7 @@ namespace Monitoring.Controllers
                 }
                 else
                 {
-                    var ValidationErrorsToJson = jsonConverters.SerializeErrors(ValidationErrors.ToList());
+                    var ValidationErrorsToJson = jsonConverters.SerializeStrings(ValidationErrors.ToList());
                     if (ValidationErrorsToJson != null)
                     {
                         return BadRequest(ValidationErrorsToJson);

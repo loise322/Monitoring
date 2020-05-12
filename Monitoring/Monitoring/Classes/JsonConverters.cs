@@ -53,20 +53,20 @@ namespace Monitoring.Classes
         }
 
         /// <summary>
-        /// Сериализация ошибок валидатора для передечи в представление.
+        /// Сериализация строк для передечи в представление.
         /// </summary>
-        /// <param name="errors">Список ошибок валидатора.</param>
-        /// <returns>Возвращает ошибки валидатор в виде JSON</returns>
-        public string SerializeErrors(List<string> errors)
+        /// <param name="strings">Список строк.</param>
+        /// <returns>Возвращает список строк в виде JSON строки.</returns>
+        public string SerializeStrings(List<string> strings)
         {
             try
             {
-                string SerializedErrors = JsonConvert.SerializeObject(errors);
-                return SerializedErrors;
+                string SerializedStrings = JsonConvert.SerializeObject(strings);
+                return SerializedStrings;
             }
             catch (Exception ex)
             {
-                logger.Error($"При сериализации данных {errors} произошла ошибка: " + ex);
+                logger.Error($"При сериализации данных {strings} произошла ошибка: " + ex);
                 return null;
             };
         }
