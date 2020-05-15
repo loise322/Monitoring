@@ -19,19 +19,10 @@
         document.location.href = 'http://localhost:3000/Home/Metrics'
     } else {
         if (response.status == "400") {
-            let json = await response.json();
-            let text = "Ошибка валидации!\r\n";
-            for (let i = 0; i < json.length; i++) {
-                text = text + json[i] + "\r\n";
-            }
+            let text = await response.text();
             alert(text);
         } else {
-            if (response.status == "500") {
-                let text = await response.text();
-                alert(text);
-            } else {
-                alert("Ошибка HTTP: " + response.status);
-            }
+            alert("Ошибка HTTP: " + response.status);
         }
     }
 };

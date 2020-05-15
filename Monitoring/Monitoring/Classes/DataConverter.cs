@@ -13,7 +13,7 @@ namespace Monitoring.Classes
     /// <summary>
     /// Используется для сериализации и десереализации данных.
     /// </summary>
-    public class JsonConverters
+    public class DataConverter
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         /// <summary>

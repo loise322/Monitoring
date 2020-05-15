@@ -55,7 +55,7 @@ $(document).ready(function ($) {
         return processItemThresholds(item, targetdiv);
     };
 
-    // returns: 0 - ok, 1 - warning, 3 - alarm
+    // returns: 0 - ok, 1 - warning, 2 - alarm
     function processItemThresholds(item, targetDiv) {
         if ((!item.isBoolean && item.alarmThreshold > 0 && item.value >= item.alarmThreshold) || (item.isBoolean && item.value > 0)) {
             return setItemAlarm(targetDiv);
@@ -113,12 +113,11 @@ $(document).ready(function ($) {
                 var globalState = 0;
                 $.each(data.metrics, function (index, item) {
                     var itemState = processItem(item);
+                    processData(item);
                     if (itemState > globalState) {
                         globalState = itemState;
                     }
                 });
-                processItem(data);
-                processData(data);
                 onGlobalStateChanged(lastGlobalState, globalState);
                 lastUpdateTimestamp = new Date();
                 $('#footer').text('Данные от ' + lastUpdateTimestamp.toLocaleString()).removeClass('error');

@@ -39,27 +39,28 @@ namespace Monitoring.Validators
                 errors.Add($"Длина строки {Name} должна быть  до 32 символов!");
             }
             return errors;
-
         }
 
         /// <summary>
         /// Валидация вводимых строковых данных на корректность через ValidateMaxLength().
         /// </summary>
-        /// <param name="parameters"> Принимает строки, которым нужно пройти валидацию.</param>
-        /// <returns> Возвращает список строк ошибок возникших при валидации  </returns>
-        public List<string> ValidateStrings(params string[] parameters)
+        /// <param name="data"> Принимает строки, которым нужно пройти валидацию.</param>
+        /// <returns> Возвращает ошибки возникшие при валидации</returns>
+        public string ValidateStrings(List<ValidationData> data)
         {       
-            if (parameters.Length == 0)
+            if (data.Count() == 0)
             {
                 return null;
             }
-            List<string> names = new List<string> { "Name", "Kind" };
             List<string> errors = new List<string>();
-            for (int i = 0; i < parameters.Length; i++)
+            for (int i = 0; i < data.Count(); i++)
             {
-                errors.AddRange(ValidateMaxLength(parameters[i], names[i]).ToList());
+                if (data[i].Kind == ValidationKind.MaxLength)
+                {
+                    errors.AddRange(ValidateMaxLength(data[i].Value, data[i].Name));
+                }
             };
-            return errors;
-        }       
+            return string.Join("\r\n", errors); ;
+        }
     }
 }

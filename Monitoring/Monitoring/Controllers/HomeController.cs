@@ -59,21 +59,21 @@ namespace Monitoring.Controllers
         {
             ViewBag.Title = "Monitoring";
             MetricItem Metric = _db.Metrics.FirstOrDefault(i => i.Id == id);
-            if (Metric != null)
+            if (Metric == null)
             {
-                EditMetricModel MetricModel = new EditMetricModel
-                {
-                    Id = Metric.Id,
-                    Name = Metric.Name,
-                    IsBoolean = Metric.IsBoolean,
-                    AlarmThreshold = Metric.AlarmThreshold,
-                    WarningThreshold = Metric.WarningThreshold,
-                    Priority = Metric.Priority,
-                    Kind = Metric.Kind
-                };
-                return View(MetricModel);
+                return View();
             }
-            return View();
+            EditMetricModel MetricModel = new EditMetricModel
+            {
+                Id = Metric.Id,
+                Name = Metric.Name,
+                IsBoolean = Metric.IsBoolean,
+                AlarmThreshold = Metric.AlarmThreshold,
+                WarningThreshold = Metric.WarningThreshold,
+                Priority = Metric.Priority,
+                Kind = Metric.Kind
+            };
+            return View(MetricModel);
         }
 
         /// <summary>
@@ -85,35 +85,32 @@ namespace Monitoring.Controllers
         public IActionResult EditMetric([FromBody]JsonElement Data)
         {
             StringValidator stringValidator = new StringValidator();
-            JsonConverters jsonConverters = new JsonConverters();
+            DataConverter jsonConverters = new DataConverter();
             var DataForEdit = jsonConverters.DeserializeMetric(Data);
-            if (DataForEdit != null)
+            if (DataForEdit == null)
             {
-                var MetricForEdit = _db.Metrics.FirstOrDefault(i => i.Id == DataForEdit.Id);
-                var ValidationErrors = stringValidator.ValidateStrings(DataForEdit.Name, DataForEdit.Kind);
-                if (ValidationErrors.Count() == 0)
-                {
-                    MetricForEdit.Name = DataForEdit.Name;
-                    MetricForEdit.IsBoolean = DataForEdit.IsBoolean;
-                    MetricForEdit.AlarmThreshold = DataForEdit.AlarmThreshold;
-                    MetricForEdit.WarningThreshold = DataForEdit.WarningThreshold;
-                    MetricForEdit.Priority = DataForEdit.Priority;
-                    MetricForEdit.Kind = DataForEdit.Kind;
-                    _db.SaveChanges();
-                    logger.Info("Changes saved!");
-                    return Ok();
-                }
-                else
-                {
-                    var ValidationErrorsToJson = jsonConverters.SerializeStrings(ValidationErrors.ToList());
-                    if (ValidationErrorsToJson != null)
-                    {
-                        return BadRequest(ValidationErrorsToJson);
-                    }
-                    return StatusCode(500, "Произошла ошибка при сериализации ошибок валидатора!");
-                }
+                return BadRequest("Произошла ошибка при десериализации!");
             }
-            return StatusCode(500, "Произошла ошибка при десериализации");
+            List<ValidationData> validationData = new List<ValidationData>
+            {
+                new ValidationData { Name = "Name", Value = DataForEdit.Name, Kind = ValidationKind.MaxLength },
+                new ValidationData { Name = "Kind", Value = DataForEdit.Kind, Kind = ValidationKind.MaxLength }
+            };
+            var MetricForEdit = _db.Metrics.FirstOrDefault(i => i.Id == DataForEdit.Id);
+            var ValidationErrors = stringValidator.ValidateStrings(validationData);
+            if (ValidationErrors.Count() == 0)
+            {
+                MetricForEdit.Name = DataForEdit.Name;
+                MetricForEdit.IsBoolean = DataForEdit.IsBoolean;
+                MetricForEdit.AlarmThreshold = DataForEdit.AlarmThreshold;
+                MetricForEdit.WarningThreshold = DataForEdit.WarningThreshold;
+                MetricForEdit.Priority = DataForEdit.Priority;
+                MetricForEdit.Kind = DataForEdit.Kind;
+                _db.SaveChanges();
+                logger.Info("Changes saved!");
+                return Ok();
+            }
+            return BadRequest(ValidationErrors); 
         }
 
         /// <summary>
@@ -134,29 +131,27 @@ namespace Monitoring.Controllers
         public IActionResult AddMetric([FromBody]JsonElement Data)
         {
             StringValidator stringValidator = new StringValidator();
-            JsonConverters jsonConverters = new JsonConverters();
+            DataConverter jsonConverters = new DataConverter();
             var DataForAdd = jsonConverters.DeserializeMetric(Data);
-            if (DataForAdd != null)
+            if (DataForAdd == null)
             {
-                var ValidationErrors = stringValidator.ValidateStrings(DataForAdd.Name, DataForAdd.Kind);
-                if (ValidationErrors.Count() == 0)
-                {
-                    _db.Metrics.Add(DataForAdd);
-                    _db.SaveChanges();
-                    logger.Info($"Metric added! {DataForAdd}");
-                    return Ok();
-                }
-                else
-                {
-                    var ValidationErrorsToJson = jsonConverters.SerializeStrings(ValidationErrors.ToList());
-                    if (ValidationErrorsToJson != null)
-                    {
-                        return BadRequest(ValidationErrorsToJson);
-                    }
-                    return StatusCode(500, "Произошла ошибка при сериализации ошибок валидатора!");
-                }
+                return BadRequest("Произошла ошибка при десериализации данных!");
+               
             }
-            return StatusCode(500, "Произошла ошибка при десериализации данных!");
+            List<ValidationData> validationData = new List<ValidationData>
+            {
+                new ValidationData { Name = "Name", Value = DataForAdd.Name, Kind = ValidationKind.MaxLength },
+                new ValidationData { Name = "Kind", Value = DataForAdd.Kind, Kind = ValidationKind.MaxLength }
+            };
+            var ValidationErrors = stringValidator.ValidateStrings(validationData);
+            if (ValidationErrors.Count() == 0)
+            {
+                _db.Metrics.Add(DataForAdd);
+                _db.SaveChanges();
+                logger.Info($"Metric added! {DataForAdd}");
+                return Ok();
+            }
+            return BadRequest(ValidationErrors);
         }
 
         /// <summary>
@@ -206,12 +201,9 @@ namespace Monitoring.Controllers
                 graphicModel.Labels = FillGraphicLabels(MaxLength);
                 return Json(graphicModel);
             }
-            else
-            {
-                graphicModel.Values = AllValues.TakeLast(AllValues.Count());
-                graphicModel.Labels = FillGraphicLabels(AllValues.Count());
-                return Json(graphicModel);
-            }    
+            graphicModel.Values = AllValues.TakeLast(AllValues.Count());
+            graphicModel.Labels = FillGraphicLabels(AllValues.Count());
+            return Json(graphicModel); 
         }
 
         /// <summary>
@@ -228,8 +220,12 @@ namespace Monitoring.Controllers
                 foreach (var item in metrics)
                 {
                     testDataJson.Add(new TestDataJson { Name = item.Name, IsBoolean = item.IsBoolean, Priority = item.Priority, Kind = item.Kind, WarningThreshold = item.WarningThreshold, AlarmThreshold = item.AlarmThreshold, Value = rnd.Next(0, item.AlarmThreshold + (item.AlarmThreshold - item.WarningThreshold)) });
-                }
-                return Json(testDataJson[rnd.Next(0, metrics.Count())]);
+                };
+                TestDataJsonList testDataJsonList = new TestDataJsonList
+                {
+                    Metrics = testDataJson
+                };
+                return Json(testDataJsonList); 
             }
             else
             {
@@ -240,7 +236,11 @@ namespace Monitoring.Controllers
                    new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityKind.Low, Kind = "Kind1", Value = rnd.Next(0, 30) },
                    new TestDataJson { Name = "Name4", IsBoolean = false, WarningThreshold = 20, AlarmThreshold = 30, Priority = PriorityKind.High, Kind = "Kind4", Value = rnd.Next(0, 40) }
                 };
-                return Json(testDataJson[rnd.Next(0, 4)]);
+                TestDataJsonList testDataJsonList = new TestDataJsonList
+                {
+                    Metrics = testDataJson
+                };
+                return Json(testDataJsonList);
             }
         }
 
@@ -253,49 +253,49 @@ namespace Monitoring.Controllers
         [HttpPost]
         public IActionResult ProcessData([FromBody]JsonElement JsonData)
         {
-            JsonConverters jsonConverters = new JsonConverters();
+            DataConverter jsonConverters = new DataConverter();
             var Data = jsonConverters.DeserializeTestData(JsonData);
-            if (Data != null)
+            if (Data == null)
             {
-                if (_db.Metrics.Select(i => i.Kind).Contains(Data.Kind))
-                {
-                    LogObject NewLog = new LogObject
-                    {
-                        MetricId = _db.Metrics.Where(i => i.Kind == Data.Kind).Select(i => i.Id).First(),
-                        Date = DateTime.Now,
-                        Value = Data.Value
-                    };
-                    _db.Logs.Add(NewLog);
-                    _db.SaveChanges();
-                    logger.Info($"Log saved! ({Data.Kind})");
-                    return Ok($"Log saved! ({Data.Kind})");
-                }
-                else
-                {
-                    MetricItem NewMetric = new MetricItem
-                    {
-                        Name = "",
-                        IsBoolean = Data.IsBoolean,
-                        WarningThreshold = Data.WarningThreshold,
-                        AlarmThreshold = Data.AlarmThreshold,
-                        Priority = Data.Priority,
-                        Kind = Data.Kind
-                    };
-                    _db.Metrics.Add(NewMetric);
-                    _db.SaveChanges();
-                    LogObject NewLog = new LogObject
-                    {
-                        MetricId = _db.Metrics.Select(i => i.Id).ToList().Last(),
-                        Date = DateTime.Now,
-                        Value = Data.Value
-                    };
-                    _db.Logs.Add(NewLog);
-                    _db.SaveChanges();
-                    logger.Info($"New metric created and that metric's log saved! ({Data.Kind})");
-                    return Ok($"New metric created and that metric's log saved! ({Data.Kind})");
-                }
+                return BadRequest("Произошла ошибка при десериализации!");
             }
-            return StatusCode(500, "Произошла ошибка при десериализации");
+            if (_db.Metrics.Select(i => i.Kind).Contains(Data.Kind))
+            {
+                LogObject NewLog = new LogObject
+                {
+                    MetricId = _db.Metrics.Where(i => i.Kind == Data.Kind).Select(i => i.Id).First(),
+                    Date = DateTime.Now,
+                    Value = Data.Value
+                };
+                _db.Logs.Add(NewLog);
+                _db.SaveChanges();
+                logger.Info($"Log saved! ({Data.Kind})");
+                return Ok($"Log saved! ({Data.Kind})");
+            }
+            else
+            {
+                MetricItem NewMetric = new MetricItem
+                {
+                    Name = "",
+                    IsBoolean = Data.IsBoolean,
+                    WarningThreshold = Data.WarningThreshold,
+                    AlarmThreshold = Data.AlarmThreshold,
+                    Priority = Data.Priority,
+                    Kind = Data.Kind
+                };
+                _db.Metrics.Add(NewMetric);
+                _db.SaveChanges();
+                LogObject NewLog = new LogObject
+                {
+                    MetricId = _db.Metrics.Select(i => i.Id).ToList().Last(),
+                    Date = DateTime.Now,
+                    Value = Data.Value
+                };
+                _db.Logs.Add(NewLog);
+                _db.SaveChanges();
+                logger.Info($"New metric created and that metric's log saved! ({Data.Kind})");
+                return Ok($"New metric created and that metric's log saved! ({Data.Kind})");
+            }
         }
 
         /// <summary>
