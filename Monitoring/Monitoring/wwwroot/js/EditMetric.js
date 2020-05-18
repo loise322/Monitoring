@@ -3,7 +3,7 @@ async function processEdit() {
     var item = {
         id: document.getElementById('editIdInput').value,
         Name: document.getElementById('editNameInput').value,
-        IsBoolean: document.getElementById('editIsBooleanInput').value,
+        IsBoolean: document.querySelector('input[name="isBoolean"]:checked').value,
         WarningThreshold: Number(document.getElementById('editWarningThresholdInput').value),
         AlarmThreshold: Number(document.getElementById('editAlarmThresholdInput').value),
         Priority: Number(document.getElementById('editPriorityInput').value),

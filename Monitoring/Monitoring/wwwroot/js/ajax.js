@@ -15,6 +15,9 @@ $(document).ready(function ($) {
 
     function buildItem(item) {
         var output = '<div class="name">' + item.name + '</div>';
+        if (item.name == "") {
+            output = '<div class="name">EmptyName</div>';
+        }
         if (!item.isBoolean) {
             output += '<div class="value">' + item.value + '</div>';
         }

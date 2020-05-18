@@ -45,25 +45,47 @@
             </tr>
         </table>       
         <input type="hidden" id="editIdInput" value="@Model.Id" />
-        <p>Name: <input type="text"  class="form-control" id="editNameInput" value="@Model.Name"></p>
-        <p>
-            IsBoolean:
-            <select id="editIsBooleanInput">
-                <option value="false">False</option>
-                <option value="true">True</option>
-            </select>
-        </p>
-        <p>WarningThreshold: <input type="text" class="form-control" id="editWarningThresholdInput" value="@Model.WarningThreshold"></p>
-        <p>AlarmThreshold: <input type="text" class="form-control" id="editAlarmThresholdInput" value="@Model.AlarmThreshold"></p>
-        <p>
-            Priority:
-            <select id="editPriorityInput">
-                <option value="2">Low</option>
-                <option value="1">Medium</option>
-                <option value="0">High</option>
-            </select>
-        </p>
-        <p>Kind: <input type="text" class="form-control" id="editKindInput" value="@Model.Kind"></p>
+        <table>
+            <tr>
+                <td>Name:</td>
+                <td></td>
+                <td><input type="text" class="form-control" id="editNameInput" value="@Model.Name"></td>
+            </tr>
+            <tr>
+                <td>Is Boolean?:</td>
+                <td></td>
+                <td>
+                    <input type="radio" name="isBoolean" id="editIsBooleanInput" value="true">Yes
+                    <input type="radio" name="isBoolean" id="editIsBooleanInput" value="false">No
+                </td>
+            </tr>
+            <tr>
+                <td>WarningThreshold:</td>
+                <td></td>
+                <td><input type="text" class="form-control" id="editWarningThresholdInput" value="@Model.WarningThreshold"></td>
+            </tr>
+            <tr>
+                <td>AlarmThreshold:</td>
+                <td></td>
+                <td><input type="text" class="form-control" id="editAlarmThresholdInput" value="@Model.AlarmThreshold"></td>
+            </tr>
+            <tr>
+                <td> Priority:</td>
+                <td></td>
+                <td>
+                    <select id="editPriorityInput">
+                        <option value="2">Low</option>
+                        <option value="1">Medium</option>
+                        <option value="0">High</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Kind:</td>
+                <td></td>
+                <td><input type="text" class="form-control" id="editKindInput" value="@Model.Kind"></td>
+            </tr>
+        </table>
         <input type="button" onclick="processEdit()" value="Edit">
         @Html.ActionLink("Back", "Metrics", "Home")
      }

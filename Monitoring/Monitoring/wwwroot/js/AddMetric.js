@@ -1,7 +1,7 @@
 ﻿async function processAdd() {
     var item = {
         Name: document.getElementById('addNameInput').value,
-        IsBoolean: document.getElementById('addIsBooleanInput').value,
+        IsBoolean: document.querySelector('input[name="isBoolean"]:checked').value,
         WarningThreshold: Number(document.getElementById('addWarningThresholdInput').value),
         AlarmThreshold: Number(document.getElementById('addAlarmThresholdInput').value),
         Priority: Number(document.getElementById('addPriorityInput').value),

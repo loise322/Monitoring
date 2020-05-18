@@ -59,7 +59,6 @@ html, body
 .medium > div, .low > div {
 	display: block;
 	position: relative;
-	overflow: auto;
 	margin-top: 5px;
 }
 
@@ -76,7 +75,7 @@ html, body
 
 .name, .value {
 	font-family: Arial;
-	vertical-align: center;
+	text-align: center;
 }
 
 #footer {
@@ -193,34 +192,4 @@ html, body
    position:absolute;
    left:75%;
    top:18%;
-}
-
-#dedmoroz {
-  position: absolute;
-  width: 346px;
-  height: 158px;
-  display: none;
-  left: 2000px;
-  top: 300px;
-}
-
-@keyframes dedmoroz_moving {
-  0% {
-    left: 2000px;
-    top: 200px;
-  }
-  50% {
-    left: 850px;
-    top: 300px;
-  }
-  100% {
-    left: -350px;
-    top:900px;
-  }
-}
-
-#dedmoroz.moving {
-  display: block;
-  animation: dedmoroz_moving 7s infinite normal;
-  animation-timing-function: linear;
 }
