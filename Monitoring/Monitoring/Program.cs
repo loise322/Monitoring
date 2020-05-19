@@ -18,7 +18,7 @@ namespace Monitoring
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            using (var scope = host.Services.CreateScope())
+            using (IServiceScope scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 try

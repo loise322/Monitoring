@@ -25,7 +25,7 @@ namespace Monitoring.Validators
         /// <returns>Возвращает строку с ошибкой, которая возникла при валидации</returns>
         public List<string> ValidateMaxLength(string StringForValidate, string Name)
         {
-            List<string> errors = new List<string>();
+            var errors = new List<string>();
             const int MaxQuantity = 32;
             if (string.IsNullOrEmpty(StringForValidate))
             {
@@ -52,7 +52,7 @@ namespace Monitoring.Validators
             {
                 return null;
             }
-            List<string> errors = new List<string>();
+            var errors = new List<string>();
             for (int i = 0; i < data.Count(); i++)
             {
                 if (data[i].Kind == ValidationKind.MaxLength)

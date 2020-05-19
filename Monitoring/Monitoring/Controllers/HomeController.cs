@@ -43,7 +43,7 @@ namespace Monitoring.Controllers
         public IActionResult Metrics()
         {
             ViewBag.Title = "Monitoring";
-            MetricsModel Model = new MetricsModel
+            var Model = new MetricsModel
             {
                 Metrics = _db.Metrics.ToList()
             };
@@ -58,12 +58,12 @@ namespace Monitoring.Controllers
         public IActionResult Edit(int id)
         {
             ViewBag.Title = "Monitoring";
-            MetricItem Metric = _db.Metrics.FirstOrDefault(i => i.Id == id);
+            var Metric = _db.Metrics.FirstOrDefault(i => i.Id == id);
             if (Metric == null)
             {
                 return View();
             }
-            EditMetricModel MetricModel = new EditMetricModel
+            var MetricModel = new EditMetricModel
             {
                 Id = Metric.Id,
                 Name = Metric.Name,
@@ -84,20 +84,20 @@ namespace Monitoring.Controllers
         [HttpPost]
         public IActionResult EditMetric([FromBody]JsonElement Data)
         {
-            StringValidator stringValidator = new StringValidator();
-            DataConverter jsonConverters = new DataConverter();
-            var DataForEdit = jsonConverters.DeserializeMetric(Data);
+            var stringValidator = new StringValidator();
+            var jsonConverters = new DataConverter();
+            MetricItem DataForEdit = jsonConverters.DeserializeMetric(Data);
             if (DataForEdit == null)
             {
                 return BadRequest("Произошла ошибка при десериализации!");
             }
-            List<ValidationData> validationData = new List<ValidationData>
+            var validationData = new List<ValidationData>
             {
                 new ValidationData { Name = "Name", Value = DataForEdit.Name, Kind = ValidationKind.MaxLength },
                 new ValidationData { Name = "Kind", Value = DataForEdit.Kind, Kind = ValidationKind.MaxLength }
             };
             var MetricForEdit = _db.Metrics.FirstOrDefault(i => i.Id == DataForEdit.Id);
-            var ValidationErrors = stringValidator.ValidateStrings(validationData);
+            string ValidationErrors = stringValidator.ValidateStrings(validationData);
             if (ValidationErrors.Count() == 0)
             {
                 MetricForEdit.Name = DataForEdit.Name;
@@ -130,20 +130,20 @@ namespace Monitoring.Controllers
         [HttpPost]
         public IActionResult AddMetric([FromBody]JsonElement Data)
         {
-            StringValidator stringValidator = new StringValidator();
-            DataConverter jsonConverters = new DataConverter();
-            var DataForAdd = jsonConverters.DeserializeMetric(Data);
+            var stringValidator = new StringValidator();
+            var jsonConverters = new DataConverter();
+            MetricItem DataForAdd = jsonConverters.DeserializeMetric(Data);
             if (DataForAdd == null)
             {
                 return BadRequest("Произошла ошибка при десериализации данных!");
                
             }
-            List<ValidationData> validationData = new List<ValidationData>
+            var validationData = new List<ValidationData>
             {
                 new ValidationData { Name = "Name", Value = DataForAdd.Name, Kind = ValidationKind.MaxLength },
                 new ValidationData { Name = "Kind", Value = DataForAdd.Kind, Kind = ValidationKind.MaxLength }
             };
-            var ValidationErrors = stringValidator.ValidateStrings(validationData);
+            string ValidationErrors = stringValidator.ValidateStrings(validationData);
             if (ValidationErrors.Count() == 0)
             {
                 _db.Metrics.Add(DataForAdd);
@@ -162,7 +162,7 @@ namespace Monitoring.Controllers
         {
             if (_db.Metrics.Select(i => i.Id).Contains(id))
             {
-                MetricItem Metric = new MetricItem
+                var Metric = new MetricItem
                 {
                     Id = id
                 };
@@ -193,7 +193,7 @@ namespace Monitoring.Controllers
         {
             var AllValues = _db.Logs.Where(i => i.MetricId == id).Select(i => i.Value).ToList();
             const int MaxLength = 50;
-            GraphicModel graphicModel = new GraphicModel();
+            var graphicModel = new GraphicModel();
             if (AllValues.Count() > MaxLength)
             {
                
@@ -215,30 +215,25 @@ namespace Monitoring.Controllers
             Random rnd = new Random();
             if (_db.Metrics.Any())
             {
-                List<TestDataJson> testDataJson = new List<TestDataJson>();
+                var testDataJsonList = new TestDataJsonList();
                 var metrics = _db.Metrics.ToList();
                 foreach (var item in metrics)
                 {
-                    testDataJson.Add(new TestDataJson { Name = item.Name, IsBoolean = item.IsBoolean, Priority = item.Priority, Kind = item.Kind, WarningThreshold = item.WarningThreshold, AlarmThreshold = item.AlarmThreshold, Value = rnd.Next(0, item.AlarmThreshold + (item.AlarmThreshold - item.WarningThreshold)) });
-                };
-                TestDataJsonList testDataJsonList = new TestDataJsonList
-                {
-                    Metrics = testDataJson
+                    testDataJsonList.Metrics.Add(new TestDataJson { Name = item.Name, IsBoolean = item.IsBoolean, Priority = item.Priority, Kind = item.Kind, WarningThreshold = item.WarningThreshold, AlarmThreshold = item.AlarmThreshold, Value = rnd.Next(0, item.AlarmThreshold + (item.AlarmThreshold - item.WarningThreshold)) });
                 };
                 return Json(testDataJsonList); 
             }
             else
             {
-                List<TestDataJson> testDataJson = new List<TestDataJson>
+                var testDataJsonList = new TestDataJsonList
                 {
-                   new TestDataJson { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = PriorityKind.Medium, Kind = "Kind3", Value = rnd.Next(0, 150) },
-                   new TestDataJson { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = PriorityKind.High, Kind = "Kind2", Value = rnd.Next(0, 120) },
-                   new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityKind.Low, Kind = "Kind1", Value = rnd.Next(0, 30) },
-                   new TestDataJson { Name = "Name4", IsBoolean = false, WarningThreshold = 20, AlarmThreshold = 30, Priority = PriorityKind.High, Kind = "Kind4", Value = rnd.Next(0, 40) }
-                };
-                TestDataJsonList testDataJsonList = new TestDataJsonList
-                {
-                    Metrics = testDataJson
+                    Metrics = 
+                    {
+                        new TestDataJson { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = PriorityKind.Medium, Kind = "Kind3", Value = rnd.Next(0, 150) },
+                        new TestDataJson { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = PriorityKind.High, Kind = "Kind2", Value = rnd.Next(0, 120) },
+                        new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityKind.Low, Kind = "Kind1", Value = rnd.Next(0, 30) },
+                        new TestDataJson { Name = "Name4", IsBoolean = false, WarningThreshold = 20, AlarmThreshold = 30, Priority = PriorityKind.High, Kind = "Kind4", Value = rnd.Next(0, 40) }
+                    }
                 };
                 return Json(testDataJsonList);
             }
@@ -254,7 +249,7 @@ namespace Monitoring.Controllers
         public IActionResult ProcessData([FromBody]JsonElement JsonData)
         {
             DataConverter jsonConverters = new DataConverter();
-            var Data = jsonConverters.DeserializeTestData(JsonData);
+            TestDataJson Data = jsonConverters.DeserializeTestData(JsonData);
             if (Data == null)
             {
                 return BadRequest("Произошла ошибка при десериализации!");
