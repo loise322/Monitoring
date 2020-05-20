@@ -20,23 +20,23 @@ namespace Monitoring.Validators
         /// <summary>
         /// Проверка входящих строк на длину строки и заполненость.
         /// </summary>
-        /// <param name="StringForValidate">Строка, которую требуется проверить на корректность</param>
-        /// <param name="Name">Наименование строки, которую требуется проверить на корректность</param>
+        /// <param name="stringForValidate">Строка, которую требуется проверить на корректность</param>
+        /// <param name="name">Наименование строки, которую требуется проверить на корректность</param>
         /// <returns>Возвращает строку с ошибкой, которая возникла при валидации</returns>
-        public List<string> ValidateMaxLength(string StringForValidate, string Name)
+        public List<string> ValidateMaxLength(string stringForValidate, string name)
         {
             var errors = new List<string>();
             const int MaxQuantity = 32;
-            if (string.IsNullOrEmpty(StringForValidate))
+            if (string.IsNullOrEmpty(stringForValidate))
             {
-                logger.Error($"Поле {Name} должно быть заполнено!");
-                errors.Add($"Поле {Name} должно быть заполнено!");
+                logger.Error($"Поле {name} должно быть заполнено!");
+                errors.Add($"Поле {name} должно быть заполнено!");
                 return errors;
             }
-            if (!string.IsNullOrEmpty(StringForValidate) && StringForValidate.Length > MaxQuantity)
+            if (!string.IsNullOrEmpty(stringForValidate) && stringForValidate.Length > MaxQuantity)
             {
-                logger.Error($"Длина строки {Name} должна быть  до 32 символов!");
-                errors.Add($"Длина строки {Name} должна быть  до 32 символов!");
+                logger.Error($"Длина строки {name} должна быть  до 32 символов!");
+                errors.Add($"Длина строки {name} должна быть  до 32 символов!");
             }
             return errors;
         }

@@ -43,11 +43,11 @@ namespace Monitoring.Controllers
         public IActionResult Metrics()
         {
             ViewBag.Title = "Monitoring";
-            var Model = new MetricsModel
+            var model = new MetricsModel
             {
                 Metrics = _db.Metrics.ToList()
             };
-            return View(Model);
+            return View(model);
         }
 
         /// <summary>
@@ -58,59 +58,59 @@ namespace Monitoring.Controllers
         public IActionResult Edit(int id)
         {
             ViewBag.Title = "Monitoring";
-            var Metric = _db.Metrics.FirstOrDefault(i => i.Id == id);
-            if (Metric == null)
+            var metric = _db.Metrics.FirstOrDefault(i => i.Id == id);
+            if (metric == null)
             {
                 return View();
             }
-            var MetricModel = new EditMetricModel
+            var metricModel = new EditMetricModel
             {
-                Id = Metric.Id,
-                Name = Metric.Name,
-                IsBoolean = Metric.IsBoolean,
-                AlarmThreshold = Metric.AlarmThreshold,
-                WarningThreshold = Metric.WarningThreshold,
-                Priority = Metric.Priority,
-                Kind = Metric.Kind
+                Id = metric.Id,
+                Name = metric.Name,
+                IsBoolean = metric.IsBoolean,
+                AlarmThreshold = metric.AlarmThreshold,
+                WarningThreshold = metric.WarningThreshold,
+                Priority = metric.Priority,
+                Kind = metric.Kind
             };
-            return View(MetricModel);
+            return View(metricModel);
         }
 
         /// <summary>
         /// Редактирование метрик в базе данных.
         /// </summary>
-        /// <param name="Data">Принятые JSON данные из представления.</param>
+        /// <param name="data">Принятые JSON данные из представления.</param>
         /// <returns>Возвращает коды состояния или ошибки, которые произошли при валидации</returns>
         [HttpPost]
-        public IActionResult EditMetric([FromBody]JsonElement Data)
+        public IActionResult EditMetric([FromBody]JsonElement data)
         {
             var stringValidator = new StringValidator();
             var jsonConverters = new DataConverter();
-            MetricItem DataForEdit = jsonConverters.DeserializeMetric(Data);
-            if (DataForEdit == null)
+            MetricItem dataForEdit = jsonConverters.DeserializeMetric(data);
+            if (dataForEdit == null)
             {
                 return BadRequest("Произошла ошибка при десериализации!");
             }
             var validationData = new List<ValidationData>
             {
-                new ValidationData { Name = "Name", Value = DataForEdit.Name, Kind = ValidationKind.MaxLength },
-                new ValidationData { Name = "Kind", Value = DataForEdit.Kind, Kind = ValidationKind.MaxLength }
+                new ValidationData { Name = "Name", Value = dataForEdit.Name, Kind = ValidationKind.MaxLength },
+                new ValidationData { Name = "Kind", Value = dataForEdit.Kind, Kind = ValidationKind.MaxLength }
             };
-            var MetricForEdit = _db.Metrics.FirstOrDefault(i => i.Id == DataForEdit.Id);
-            string ValidationErrors = stringValidator.ValidateStrings(validationData);
-            if (ValidationErrors.Count() == 0)
+            var metricForEdit = _db.Metrics.FirstOrDefault(i => i.Id == dataForEdit.Id);
+            string validationErrors = stringValidator.ValidateStrings(validationData);
+            if (validationErrors.Count() == 0)
             {
-                MetricForEdit.Name = DataForEdit.Name;
-                MetricForEdit.IsBoolean = DataForEdit.IsBoolean;
-                MetricForEdit.AlarmThreshold = DataForEdit.AlarmThreshold;
-                MetricForEdit.WarningThreshold = DataForEdit.WarningThreshold;
-                MetricForEdit.Priority = DataForEdit.Priority;
-                MetricForEdit.Kind = DataForEdit.Kind;
+                metricForEdit.Name = dataForEdit.Name;
+                metricForEdit.IsBoolean = dataForEdit.IsBoolean;
+                metricForEdit.AlarmThreshold = dataForEdit.AlarmThreshold;
+                metricForEdit.WarningThreshold = dataForEdit.WarningThreshold;
+                metricForEdit.Priority = dataForEdit.Priority;
+                metricForEdit.Kind = dataForEdit.Kind;
                 _db.SaveChanges();
                 logger.Info("Changes saved!");
                 return Ok();
             }
-            return BadRequest(ValidationErrors); 
+            return BadRequest(validationErrors); 
         }
 
         /// <summary>
@@ -125,33 +125,33 @@ namespace Monitoring.Controllers
         /// <summary>
         /// Добавление метрик в базу данных.
         /// </summary>
-        /// <param name="Data">Принятые JSON данные из представления.</param>
+        /// <param name="data">Принятые JSON данные из представления.</param>
         /// <returns>Возвращает коды состояния или ошибки, которые произошли при валидации</returns>
         [HttpPost]
-        public IActionResult AddMetric([FromBody]JsonElement Data)
+        public IActionResult AddMetric([FromBody]JsonElement data)
         {
             var stringValidator = new StringValidator();
             var jsonConverters = new DataConverter();
-            MetricItem DataForAdd = jsonConverters.DeserializeMetric(Data);
-            if (DataForAdd == null)
+            MetricItem dataForAdd = jsonConverters.DeserializeMetric(data);
+            if (dataForAdd == null)
             {
                 return BadRequest("Произошла ошибка при десериализации данных!");
                
             }
             var validationData = new List<ValidationData>
             {
-                new ValidationData { Name = "Name", Value = DataForAdd.Name, Kind = ValidationKind.MaxLength },
-                new ValidationData { Name = "Kind", Value = DataForAdd.Kind, Kind = ValidationKind.MaxLength }
+                new ValidationData { Name = "Name", Value = dataForAdd.Name, Kind = ValidationKind.MaxLength },
+                new ValidationData { Name = "Kind", Value = dataForAdd.Kind, Kind = ValidationKind.MaxLength }
             };
-            string ValidationErrors = stringValidator.ValidateStrings(validationData);
-            if (ValidationErrors.Count() == 0)
+            string validationErrors = stringValidator.ValidateStrings(validationData);
+            if (validationErrors.Count() == 0)
             {
-                _db.Metrics.Add(DataForAdd);
+                _db.Metrics.Add(dataForAdd);
                 _db.SaveChanges();
-                logger.Info($"Metric added! {DataForAdd}");
+                logger.Info($"Metric added! {dataForAdd}");
                 return Ok();
             }
-            return BadRequest(ValidationErrors);
+            return BadRequest(validationErrors);
         }
 
         /// <summary>
@@ -162,12 +162,12 @@ namespace Monitoring.Controllers
         {
             if (_db.Metrics.Select(i => i.Id).Contains(id))
             {
-                var Metric = new MetricItem
+                var metric = new MetricItem
                 {
                     Id = id
                 };
-                _db.Metrics.Attach(Metric);
-                _db.Metrics.Remove(Metric);
+                _db.Metrics.Attach(metric);
+                _db.Metrics.Remove(metric);
                 _db.SaveChanges();
             }
             return Redirect("/Home/Metrics");
@@ -191,18 +191,18 @@ namespace Monitoring.Controllers
         [HttpGet]
         public IActionResult DataForGraphic(int id)
         {
-            var AllValues = _db.Logs.Where(i => i.MetricId == id).Select(i => i.Value).ToList();
+            var allValues = _db.Logs.Where(i => i.MetricId == id).Select(i => i.Value).ToList();
             const int MaxLength = 50;
             var graphicModel = new GraphicModel();
-            if (AllValues.Count() > MaxLength)
+            if (allValues.Count() > MaxLength)
             {
                
-                graphicModel.Values = AllValues.TakeLast(MaxLength);
+                graphicModel.Values = allValues.TakeLast(MaxLength);
                 graphicModel.Labels = FillGraphicLabels(MaxLength);
                 return Json(graphicModel);
             }
-            graphicModel.Values = AllValues.TakeLast(AllValues.Count());
-            graphicModel.Labels = FillGraphicLabels(AllValues.Count());
+            graphicModel.Values = allValues.TakeLast(allValues.Count());
+            graphicModel.Labels = FillGraphicLabels(allValues.Count());
             return Json(graphicModel); 
         }
 
@@ -216,11 +216,13 @@ namespace Monitoring.Controllers
             if (_db.Metrics.Any())
             {
                 var testDataJsonList = new TestDataJsonList();
+                var testDataJson = new List<TestDataJson>();
                 var metrics = _db.Metrics.ToList();
                 foreach (var item in metrics)
                 {
-                    testDataJsonList.Metrics.Add(new TestDataJson { Name = item.Name, IsBoolean = item.IsBoolean, Priority = item.Priority, Kind = item.Kind, WarningThreshold = item.WarningThreshold, AlarmThreshold = item.AlarmThreshold, Value = rnd.Next(0, item.AlarmThreshold + (item.AlarmThreshold - item.WarningThreshold)) });
+                    testDataJson.Add(new TestDataJson { Name = item.Name, IsBoolean = item.IsBoolean, Priority = item.Priority, Kind = item.Kind, WarningThreshold = item.WarningThreshold, AlarmThreshold = item.AlarmThreshold, Value = rnd.Next(0, item.AlarmThreshold + (item.AlarmThreshold - item.WarningThreshold)) });
                 };
+                testDataJsonList.Metrics = testDataJson;
                 return Json(testDataJsonList); 
             }
             else
@@ -243,65 +245,65 @@ namespace Monitoring.Controllers
         /// Обработка принятых данных. Вследствие чего, добавляются новые метрики,
         /// которых нет в базе данных и добавляются логи в базу данных, если метрика уже существовала в базе даннах.
         /// </summary>
-        /// <param name="JsonData">Принятые JSON данные из представления.</param>
+        /// <param name="jsonData">Принятые JSON данные из представления.</param>
         /// <returns>Возвращает код состояния.</returns>
         [HttpPost]
-        public IActionResult ProcessData([FromBody]JsonElement JsonData)
+        public IActionResult ProcessData([FromBody]JsonElement jsonData)
         {
-            DataConverter jsonConverters = new DataConverter();
-            TestDataJson Data = jsonConverters.DeserializeTestData(JsonData);
-            if (Data == null)
+            var jsonConverters = new DataConverter();
+            TestDataJson data = jsonConverters.DeserializeTestData(jsonData);
+            if (data == null)
             {
                 return BadRequest("Произошла ошибка при десериализации!");
             }
-            if (_db.Metrics.Select(i => i.Kind).Contains(Data.Kind))
+            if (_db.Metrics.Select(i => i.Kind).Contains(data.Kind))
             {
-                LogObject NewLog = new LogObject
+                var newLog = new LogObject
                 {
-                    MetricId = _db.Metrics.Where(i => i.Kind == Data.Kind).Select(i => i.Id).First(),
+                    MetricId = _db.Metrics.Where(i => i.Kind == data.Kind).Select(i => i.Id).First(),
                     Date = DateTime.Now,
-                    Value = Data.Value
+                    Value = data.Value
                 };
-                _db.Logs.Add(NewLog);
+                _db.Logs.Add(newLog);
                 _db.SaveChanges();
-                logger.Info($"Log saved! ({Data.Kind})");
-                return Ok($"Log saved! ({Data.Kind})");
+                logger.Info($"Log saved! ({data.Kind})");
+                return Ok($"Log saved! ({data.Kind})");
             }
             else
             {
-                MetricItem NewMetric = new MetricItem
+                var newMetric = new MetricItem
                 {
                     Name = "",
-                    IsBoolean = Data.IsBoolean,
-                    WarningThreshold = Data.WarningThreshold,
-                    AlarmThreshold = Data.AlarmThreshold,
-                    Priority = Data.Priority,
-                    Kind = Data.Kind
+                    IsBoolean = data.IsBoolean,
+                    WarningThreshold = data.WarningThreshold,
+                    AlarmThreshold = data.AlarmThreshold,
+                    Priority = data.Priority,
+                    Kind = data.Kind
                 };
-                _db.Metrics.Add(NewMetric);
+                _db.Metrics.Add(newMetric);
                 _db.SaveChanges();
-                LogObject NewLog = new LogObject
+                var newLog = new LogObject
                 {
                     MetricId = _db.Metrics.Select(i => i.Id).ToList().Last(),
                     Date = DateTime.Now,
-                    Value = Data.Value
+                    Value = data.Value
                 };
-                _db.Logs.Add(NewLog);
+                _db.Logs.Add(newLog);
                 _db.SaveChanges();
-                logger.Info($"New metric created and that metric's log saved! ({Data.Kind})");
-                return Ok($"New metric created and that metric's log saved! ({Data.Kind})");
+                logger.Info($"New metric created and that metric's log saved! ({data.Kind})");
+                return Ok($"New metric created and that metric's log saved! ({data.Kind})");
             }
         }
 
         /// <summary>
         /// Заполнение ярлыков для графика.
         /// </summary>
-        /// <param name="ConditionValue">Устанавливает кол-во ярлыков.</param>
+        /// <param name="conditionValue">Устанавливает кол-во ярлыков.</param>
         /// <returns>Возвращает список ярлыков</returns>       
-        private List<int> FillGraphicLabels(int ConditionValue)
+        private List<int> FillGraphicLabels(int conditionValue)
         {
             List<int> labels = new List<int>();
-            for (int i = 0; i < ConditionValue; i++)
+            for (int i = 0; i < conditionValue; i++)
             {
                 labels.Add(i + 1);
             };

@@ -19,17 +19,17 @@ namespace Monitoring.Classes
         /// <summary>
         /// Десериализация принятых данных.
         /// </summary>
-        /// <param name="Data">Принятые JSON данные из представления.</param>
-        public TestDataJson DeserializeTestData(JsonElement Data)
+        /// <param name="data">Принятые JSON данные из представления.</param>
+        public TestDataJson DeserializeTestData(JsonElement data)
         {
             try
             {
-                TestDataJson DeserealizedData = JsonConvert.DeserializeObject<TestDataJson>(Data.ToString());
-                return DeserealizedData;
+                TestDataJson deserealizedData = JsonConvert.DeserializeObject<TestDataJson>(data.ToString());
+                return deserealizedData;
             }
             catch (Exception ex)
             {
-                logger.Error($"При сериализации данных {Data.ToString()} произошла ошибка: " + ex);
+                logger.Error($"При сериализации данных {data.ToString()} произошла ошибка: " + ex);
                 return null;
             };
         }
@@ -37,17 +37,17 @@ namespace Monitoring.Classes
         /// <summary>
         /// Десериализация данных для редактирования и добавления метрик в базу данных.
         /// </summary>
-        /// <param name="Data">Принятый JSON данные из представления.</param>
-        public MetricItem DeserializeMetric(JsonElement Data)
+        /// <param name="data">Принятый JSON данные из представления.</param>
+        public MetricItem DeserializeMetric(JsonElement data)
         {
             try
             {
-                MetricItem DeserealizedData = JsonConvert.DeserializeObject<MetricItem>(Data.ToString());
-                return DeserealizedData;
+                MetricItem deserealizedData = JsonConvert.DeserializeObject<MetricItem>(data.ToString());
+                return deserealizedData;
             }
             catch (Exception ex)
             {
-                logger.Error($"При сериализации данных {Data.ToString()} произошла ошибка: " + ex);
+                logger.Error($"При сериализации данных {data.ToString()} произошла ошибка: " + ex);
                 return null;
             };
         }
@@ -61,8 +61,8 @@ namespace Monitoring.Classes
         {
             try
             {
-                string SerializedStrings = JsonConvert.SerializeObject(strings);
-                return SerializedStrings;
+                string serializedStrings = JsonConvert.SerializeObject(strings);
+                return serializedStrings;
             }
             catch (Exception ex)
             {
