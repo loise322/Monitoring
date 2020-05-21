@@ -26,14 +26,14 @@ namespace Monitoring.Validators
         public List<string> ValidateMaxLength(string stringForValidate, string name)
         {
             var errors = new List<string>();
-            const int MaxQuantity = 32;
+            const int maxQuantity = 32;
             if (string.IsNullOrEmpty(stringForValidate))
             {
                 logger.Error($"Поле {name} должно быть заполнено!");
                 errors.Add($"Поле {name} должно быть заполнено!");
                 return errors;
             }
-            if (!string.IsNullOrEmpty(stringForValidate) && stringForValidate.Length > MaxQuantity)
+            if (!string.IsNullOrEmpty(stringForValidate) && stringForValidate.Length > maxQuantity)
             {
                 logger.Error($"Длина строки {name} должна быть  до 32 символов!");
                 errors.Add($"Длина строки {name} должна быть  до 32 символов!");

@@ -192,13 +192,13 @@ namespace Monitoring.Controllers
         public IActionResult DataForGraphic(int id)
         {
             var allValues = _db.Logs.Where(i => i.MetricId == id).Select(i => i.Value).ToList();
-            const int MaxLength = 50;
+            const int maxLength = 50;
             var graphicModel = new GraphicModel();
-            if (allValues.Count() > MaxLength)
+            if (allValues.Count() > maxLength)
             {
                
-                graphicModel.Values = allValues.TakeLast(MaxLength);
-                graphicModel.Labels = FillGraphicLabels(MaxLength);
+                graphicModel.Values = allValues.TakeLast(maxLength);
+                graphicModel.Labels = FillGraphicLabels(maxLength);
                 return Json(graphicModel);
             }
             graphicModel.Values = allValues.TakeLast(allValues.Count());
@@ -227,15 +227,16 @@ namespace Monitoring.Controllers
             }
             else
             {
+                var testDataJson = new List<TestDataJson>
+                {
+                    new TestDataJson { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = PriorityKind.Medium, Kind = "Kind3", Value = rnd.Next(0, 150) },
+                    new TestDataJson { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = PriorityKind.High, Kind = "Kind2", Value = rnd.Next(0, 120) },
+                    new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityKind.Low, Kind = "Kind1", Value = rnd.Next(0, 30) },
+                    new TestDataJson { Name = "Name4", IsBoolean = false, WarningThreshold = 20, AlarmThreshold = 30, Priority = PriorityKind.High, Kind = "Kind4", Value = rnd.Next(0, 40) }
+                };
                 var testDataJsonList = new TestDataJsonList
                 {
-                    Metrics = 
-                    {
-                        new TestDataJson { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = PriorityKind.Medium, Kind = "Kind3", Value = rnd.Next(0, 150) },
-                        new TestDataJson { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = PriorityKind.High, Kind = "Kind2", Value = rnd.Next(0, 120) },
-                        new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityKind.Low, Kind = "Kind1", Value = rnd.Next(0, 30) },
-                        new TestDataJson { Name = "Name4", IsBoolean = false, WarningThreshold = 20, AlarmThreshold = 30, Priority = PriorityKind.High, Kind = "Kind4", Value = rnd.Next(0, 40) }
-                    }
+                    Metrics = testDataJson
                 };
                 return Json(testDataJsonList);
             }
