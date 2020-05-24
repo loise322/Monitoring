@@ -16,6 +16,10 @@ namespace Monitoring.ViewModels
         /// </summary>
         public int MetricId { get; set; }
         /// <summary>
+        /// Название метрики
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
         /// Значения метрики для графика
         /// </summary>
         public IEnumerable<int> Values { get; set; }

@@ -42,7 +42,7 @@ namespace Monitoring.Controllers
         /// <returns>Возвращает представление Metrics со списком всех метрик, которые есть в базе данных.</returns>
         public IActionResult Metrics()
         {
-            ViewBag.Title = "Monitoring";
+            ViewBag.Title = "Metrics";
             var model = new MetricsModel
             {
                 Metrics = _db.Metrics.ToList()
@@ -57,7 +57,7 @@ namespace Monitoring.Controllers
         /// <returns>Возвращает представление с метрикой, которую редактируем.</returns>
         public IActionResult Edit(int id)
         {
-            ViewBag.Title = "Monitoring";
+            ViewBag.Title = "Edit metric";
             var metric = _db.Metrics.FirstOrDefault(i => i.Id == id);
             if (metric == null)
             {
@@ -119,6 +119,7 @@ namespace Monitoring.Controllers
         /// <returns>Возвращает представление Add.</returns>
         public IActionResult Add()
         {
+            ViewBag.Title = "Add metric";
             return View();
         }
 
@@ -180,7 +181,12 @@ namespace Monitoring.Controllers
         /// <returns>Возвращает представление Graphic</returns>
         public IActionResult Graphic(int id)
         {
-            return View(new GraphicModel { MetricId = id });
+            ViewBag.Title = $"Graphic of {id} metric";
+            if (_db.Metrics.Select(i => i.Id).Contains(id))
+            {
+                return View(new GraphicModel { MetricId = id });
+            };
+            return View(null);
         }
 
         /// <summary>
@@ -193,10 +199,12 @@ namespace Monitoring.Controllers
         {
             var allValues = _db.Logs.Where(i => i.MetricId == id).Select(i => i.Value).ToList();
             const int maxLength = 50;
-            var graphicModel = new GraphicModel();
-            if (allValues.Count() > maxLength)
+            var graphicModel = new GraphicModel
             {
-               
+                Name = _db.Metrics.Where(i => i.Id == id).Select(i => i.Name).First()
+            };       
+            if (allValues.Count() > maxLength)
+            {            
                 graphicModel.Values = allValues.TakeLast(maxLength);
                 graphicModel.Labels = FillGraphicLabels(maxLength);
                 return Json(graphicModel);
@@ -251,49 +259,55 @@ namespace Monitoring.Controllers
         [HttpPost]
         public IActionResult ProcessData([FromBody]JsonElement jsonData)
         {
+            string logs = "";
             var jsonConverters = new DataConverter();
-            TestDataJson data = jsonConverters.DeserializeTestData(jsonData);
+            TestDataJsonList data = jsonConverters.DeserializeTestData(jsonData);
             if (data == null)
             {
                 return BadRequest("Произошла ошибка при десериализации!");
             }
-            if (_db.Metrics.Select(i => i.Kind).Contains(data.Kind))
+            var metrics = _db.Metrics.ToList();
+            foreach (var item in data.Metrics)
             {
-                var newLog = new LogObject
+                if (metrics.Select(i => i.Kind).Contains(item.Kind))
                 {
-                    MetricId = _db.Metrics.Where(i => i.Kind == data.Kind).Select(i => i.Id).First(),
-                    Date = DateTime.Now,
-                    Value = data.Value
-                };
-                _db.Logs.Add(newLog);
-                _db.SaveChanges();
-                logger.Info($"Log saved! ({data.Kind})");
-                return Ok($"Log saved! ({data.Kind})");
-            }
-            else
-            {
-                var newMetric = new MetricItem
+                    var newLog = new LogObject
+                    {
+                        MetricId = metrics.Where(i => i.Kind == item.Kind).Select(i => i.Id).First(),
+                        Date = DateTime.Now,
+                        Value = item.Value
+                    };
+                    _db.Logs.Add(newLog);
+                    _db.SaveChanges();
+                    logger.Info($"Log saved! ({item.Kind})");
+                    logs += $"Log saved! ({item.Kind});\r\n";
+                }
+                else
                 {
-                    Name = "",
-                    IsBoolean = data.IsBoolean,
-                    WarningThreshold = data.WarningThreshold,
-                    AlarmThreshold = data.AlarmThreshold,
-                    Priority = data.Priority,
-                    Kind = data.Kind
-                };
-                _db.Metrics.Add(newMetric);
-                _db.SaveChanges();
-                var newLog = new LogObject
-                {
-                    MetricId = _db.Metrics.Select(i => i.Id).ToList().Last(),
-                    Date = DateTime.Now,
-                    Value = data.Value
-                };
-                _db.Logs.Add(newLog);
-                _db.SaveChanges();
-                logger.Info($"New metric created and that metric's log saved! ({data.Kind})");
-                return Ok($"New metric created and that metric's log saved! ({data.Kind})");
-            }
+                    var newMetric = new MetricItem
+                    {
+                        Name = "",
+                        IsBoolean = item.IsBoolean,
+                        WarningThreshold = item.WarningThreshold,
+                        AlarmThreshold = item.AlarmThreshold,
+                        Priority = item.Priority,
+                        Kind = item.Kind
+                    };
+                    _db.Metrics.Add(newMetric);
+                    _db.SaveChanges();
+                    var newLog = new LogObject
+                    {
+                        MetricId = _db.Metrics.Select(i => i.Id).ToList().Last(),
+                        Date = DateTime.Now,
+                        Value = item.Value
+                    };
+                    _db.Logs.Add(newLog);
+                    _db.SaveChanges();
+                    logger.Info($"New metric created and that metric's log saved! ({item.Kind})");
+                    logs += $"New metric created and that metric's log saved! ({item.Kind});\r\n";
+                }
+            };
+            return Ok(logs.Remove(logs.Length - 2));
         }
 
         /// <summary>

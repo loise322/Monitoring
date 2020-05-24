@@ -15,7 +15,7 @@
         }
     });
     if (response.ok) {
-        alert("Metric added!");
+        alert("Метрика добавлена!");
         document.location.href = 'http://localhost:3000/Home/Metrics'
     } else {
         if (response.status == "400") {

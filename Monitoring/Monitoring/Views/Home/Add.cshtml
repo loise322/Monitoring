@@ -2,8 +2,6 @@
     Layout = null;
 }
 
-@model EditMetricModel
-
 <!DOCTYPE html>
 
 <html>
@@ -21,25 +19,25 @@
         <tr>
             <td>Name:</td>
             <td></td>
-            <td><input type="text" class="form-control" id="addNameInput" value="@Model.Name"></td>
+            <td><input type="text" class="form-control" id="addNameInput" value=""></td>
         </tr>
         <tr>
             <td>Is Boolean?:</td>
             <td></td>
             <td>
                 <input type="radio" name="isBoolean" id="addIsBooleanInput" value="true">Yes
-                <input type="radio" name="isBoolean" id="addIsBooleanInput" value="false">No
+                <input type="radio" name="isBoolean" id="addIsBooleanInput" value="false" checked>No
             </td>
         </tr>
         <tr>
             <td>WarningThreshold:</td>
             <td></td>
-            <td><input type="text" class="form-control" id="addWarningThresholdInput" value="@Model.WarningThreshold"></td>
+            <td><input type="text" class="form-control" id="addWarningThresholdInput" value=""></td>
         </tr>
         <tr>
             <td>AlarmThreshold:</td>
             <td></td>
-            <td><input type="text" class="form-control" id="addAlarmThresholdInput" value="@Model.AlarmThreshold"></td>
+            <td><input type="text" class="form-control" id="addAlarmThresholdInput" value=""></td>
         </tr>
         <tr>
             <td> Priority:</td>
@@ -55,7 +53,7 @@
         <tr>
             <td>Kind:</td>
             <td></td>
-            <td><input type="text" class="form-control" id="addKindInput" value="@Model.Kind"></td>
+            <td><input type="text" class="form-control" id="addKindInput" value=""></td>
         </tr>
     </table>
     <input type="button" onclick="processAdd()" value="Add">

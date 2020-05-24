@@ -2,6 +2,7 @@
     $.ajax({
         type: 'GET',
         url: "http://localhost:3000/Home/DataForGraphic/" + id,
+        timeout: 10000,
         success: function (data) {
             console.log(data);
             var ctx = document.getElementById('myChart').getContext('2d');
@@ -10,7 +11,7 @@
                 data: {
                     labels: data.labels,
                     datasets: [{
-                        label: '# of counts',
+                        label: data.name,
                         data: data.values,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',

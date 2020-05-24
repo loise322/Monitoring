@@ -20,11 +20,11 @@ namespace Monitoring.Classes
         /// Десериализация принятых данных.
         /// </summary>
         /// <param name="data">Принятые JSON данные из представления.</param>
-        public TestDataJson DeserializeTestData(JsonElement data)
+        public TestDataJsonList DeserializeTestData(JsonElement data)
         {
             try
             {
-                TestDataJson deserealizedData = JsonConvert.DeserializeObject<TestDataJson>(data.ToString());
+                var deserealizedData = JsonConvert.DeserializeObject<TestDataJsonList>(data.ToString());
                 return deserealizedData;
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace Monitoring.Classes
         {
             try
             {
-                MetricItem deserealizedData = JsonConvert.DeserializeObject<MetricItem>(data.ToString());
+                var deserealizedData = JsonConvert.DeserializeObject<MetricItem>(data.ToString());
                 return deserealizedData;
             }
             catch (Exception ex)

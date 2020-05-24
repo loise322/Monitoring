@@ -17,7 +17,7 @@ async function processEdit() {
         }
     });
     if (response.ok) {
-        alert("Changes saved!");
+        alert("Изменения сохранены!");
         document.location.href = 'http://localhost:3000/Home/Metrics'
     } else {
         if (response.status == "400") {

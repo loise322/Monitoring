@@ -9,16 +9,23 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Graphic</title>
+    <title>@ViewBag.Title</title>
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/Chart.bundle.min.js"></script>
     <script src="~/js/Graphic.js"></script>
 </head>
 <body>
-    <div style="width: 600px; height: 600px;"><canvas id="myChart" width="400" height="400"></canvas></div>
-    <button type="button" id="btnBack" onclick="location.href='@Url.Action("Metrics","Home")'">Back to Metrics</button>
-    <script>
+    @if (Model != null)
+    {
+        <div style="width: 600px; height: 600px;"><canvas id="myChart" width="400" height="400"></canvas></div>
+        <button type="button" id="btnBack" onclick="location.href='@Url.Action("Metrics", "Home")'">Back to Metrics</button>
+        <script>
         getData(@Model.MetricId);
-    </script>
+        </script>
+    }
+    else
+    {
+        <p>Метрики с данным идентификатором не существует!</p>
+    }
 </body>
 </html>

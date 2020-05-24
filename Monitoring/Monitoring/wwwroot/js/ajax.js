@@ -109,18 +109,18 @@ $(document).ready(function ($) {
     function processJson() {
         $.ajax({
             type: 'GET',
-            url: 'Home/AcceptRequest',
+            url: 'AcceptRequest',
             dataType: 'json',
             timeout: 5000,
             success: function (data) {
                 var globalState = 0;
                 $.each(data.metrics, function (index, item) {
                     var itemState = processItem(item);
-                    processData(item);
                     if (itemState > globalState) {
                         globalState = itemState;
                     }
                 });
+                processData(data);
                 onGlobalStateChanged(lastGlobalState, globalState);
                 lastUpdateTimestamp = new Date();
                 $('#footer').text('Данные от ' + lastUpdateTimestamp.toLocaleString()).removeClass('error');
