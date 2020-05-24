@@ -18,7 +18,7 @@ namespace Monitoring.Validators
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Проверка входящих строк на длину строки и заполненость.
+        /// Проверка входящих строк на длину строки и заполненность.
         /// </summary>
         /// <param name="stringForValidate">Строка, которую требуется проверить на корректность</param>
         /// <param name="name">Наименование строки, которую требуется проверить на корректность</param>
