@@ -8,7 +8,7 @@ namespace Monitoring.Test
     public class StringValidatorTests
     {
         [TestMethod]
-        public void ValidateMaxLength_ValidateNullString_ErrorEmptyStringReturned()
+        public void StringValidatorT_ValidateMaxLength_ValidateNullString_ErrorEmptyStringReturned()
         {
             //Arrange
             StringValidator stringValidator = new StringValidator();
@@ -24,7 +24,7 @@ namespace Monitoring.Test
         }
 
         [TestMethod]
-        public void ValidateMaxLength_ValidateEmptyString_ErrorEmptyStringReturned()
+        public void StringValidatorT_ValidateMaxLength_ValidateEmptyString_ErrorEmptyStringReturned()
         {
             //Arrange
             StringValidator stringValidator = new StringValidator();
@@ -40,7 +40,7 @@ namespace Monitoring.Test
         }
 
         [TestMethod]
-        public void ValidateMaxLength_ValidateBeyondMaxLengthString_ErrorMaxLengthStringReturned()
+        public void StringValidatorT_ValidateMaxLength_ValidateBeyondMaxLengthString_ErrorMaxLengthStringReturned()
         {
             //Arrange
             StringValidator stringValidator = new StringValidator();
@@ -56,7 +56,7 @@ namespace Monitoring.Test
         }
 
         [TestMethod]
-        public void ValidateMaxLength_ValidateNotEmptyAndNotBeyondMaxString_EmptyErrorListReturned()
+        public void StringValidatorT_ValidateMaxLength_ValidateNotEmptyAndNotBeyondMaxString_EmptyErrorListReturned()
         {
             //Arrange
             StringValidator stringValidator = new StringValidator();

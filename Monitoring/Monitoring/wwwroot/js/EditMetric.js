@@ -1,5 +1,4 @@
-﻿
-async function processEdit() {
+﻿async function processEdit() {
     var item = {
         id: document.getElementById('editIdInput').value,
         Name: document.getElementById('editNameInput').value,

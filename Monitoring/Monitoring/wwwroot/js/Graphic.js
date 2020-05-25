@@ -1,4 +1,5 @@
 ﻿function getData(id) {
+    var timeFormat = 'mm/DD/yyyy HH:mm';
     $.ajax({
         type: 'GET',
         url: "http://localhost:3000/Home/DataForGraphic/" + id,
@@ -41,6 +42,17 @@
                     },
                     scales: {
                         xAxes: [{
+                            type: 'time',
+                            time: {
+                                parser: 'MM/DD/YYYY HH:mm',
+                                tooltipFormat: 'll HH:mm',
+                                unit: 'minute',
+                                unitStepSize: 1,
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            },
                             gridLines: {
                                 display: true,
                                 color: "#000000"
@@ -52,6 +64,10 @@
                             }
                         }],
                         yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Value'
+                            },
                             gridLines: {
                                 display: true,
                                 color: "#000000"

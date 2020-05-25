@@ -26,6 +26,6 @@ namespace Monitoring.ViewModels
         /// <summary>
         /// Ярлыки метрики для графика
         /// </summary>
-        public IEnumerable<int> Labels { get; set; }
+        public IEnumerable<string> Labels { get; set; }
     }
 }

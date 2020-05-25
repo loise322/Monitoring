@@ -197,20 +197,22 @@ namespace Monitoring.Controllers
         [HttpGet]
         public IActionResult DataForGraphic(int id)
         {
-            var allValues = _db.Logs.Where(i => i.MetricId == id).Select(i => i.Value).ToList();
+            var test = _db.Logs.Where(i => i.MetricId == id).ToList();
+            var allValues = test.Select(i => i.Value);
+            var allDate = test.Select(i => i.Date.ToString("MM-dd-yyyy HH:mm"));
             const int maxLength = 50;
             var graphicModel = new GraphicModel
             {
-                Name = _db.Metrics.Where(i => i.Id == id).Select(i => i.Name).First()
-            };       
+                Name = _db.Metrics.Where(i => i.Id == id).Select(i => i.Name).First()   
+            };
             if (allValues.Count() > maxLength)
-            {            
+            {
                 graphicModel.Values = allValues.TakeLast(maxLength);
-                graphicModel.Labels = FillGraphicLabels(maxLength);
+                graphicModel.Labels = allDate.TakeLast(maxLength);
                 return Json(graphicModel);
             }
             graphicModel.Values = allValues.TakeLast(allValues.Count());
-            graphicModel.Labels = FillGraphicLabels(allValues.Count());
+            graphicModel.Labels = allDate.TakeLast(allValues.Count());
             return Json(graphicModel); 
         }
 
@@ -315,14 +317,15 @@ namespace Monitoring.Controllers
         /// </summary>
         /// <param name="conditionValue">Устанавливает кол-во ярлыков.</param>
         /// <returns>Возвращает список ярлыков</returns>       
-        private List<int> FillGraphicLabels(int conditionValue)
-        {
-            List<int> labels = new List<int>();
-            for (int i = 0; i < conditionValue; i++)
-            {
-                labels.Add(i + 1);
-            };
-            return labels;
-        }
+        //private List<string> FillGraphicLabels(IEnumerable<DateTime> dates)
+        //{
+        //    List<string> labels = new List<string>();
+        //    var date = dates.ToList();
+        //    for (int i = 0; i < dates.Count(); i++)
+        //    {
+        //        labels.Add(date[i].ToShortDateString());
+        //    };
+        //    return labels;
+        //}
     }
 }
