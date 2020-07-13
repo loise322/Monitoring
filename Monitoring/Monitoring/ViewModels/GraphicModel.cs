@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Monitoring.Models;
+using ApplicationCore;
 
 namespace Monitoring.ViewModels
 {

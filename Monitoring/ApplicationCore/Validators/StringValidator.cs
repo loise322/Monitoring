@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Monitoring.Models;
-using Monitoring.ViewModels;
-using Newtonsoft.Json;
+using ApplicationCore.Models;
 using NLog;
 
-namespace Monitoring.Validators
+namespace ApplicationCore.Validators
 {
     /// <summary>
     /// Валидатор для строковых данных на корректность.
     /// </summary>
-    public class StringValidator
+    public class StringValidator : IStringValidator
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -61,6 +56,16 @@ namespace Monitoring.Validators
                 }
             };
             return string.Join("\r\n", errors); ;
+        }
+
+        public List<ValidationData> SetValidationData(MetricItem data)
+        {
+            var validationData = new List<ValidationData>
+            {
+                new ValidationData { Name = "Name", Value = data.Name, Kind = ValidationKind.MaxLength },
+                new ValidationData { Name = "Kind", Value = data.Kind, Kind = ValidationKind.MaxLength }
+            };
+            return validationData;
         }
     }
 }

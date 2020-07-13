@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Monitoring.Validators
+namespace ApplicationCore.Validators
 {
     /// <summary>
     /// Данные для валидации.
@@ -22,5 +22,7 @@ namespace Monitoring.Validators
         /// Тип валидации, которую строка должна пройти.
         /// </summary>
         public ValidationKind Kind { get; set; }
+
+
     }
 }

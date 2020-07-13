@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Monitoring.Models
+namespace ApplicationCore.Models
 {
     /// <summary>
     /// Модель представляет те объекты, которые будут храниться в базе данных.

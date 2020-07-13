@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using ApplicationCore.Validators;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Monitoring.Validators;
 
 namespace Monitoring.Test
 {

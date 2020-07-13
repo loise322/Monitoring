@@ -97,7 +97,7 @@ $(document).ready(function ($) {
     };
 
     function processData(item) {
-        fetch("http://localhost:3000/Home/ProcessData", {
+        fetch("http://localhost:3000/Server/ProcessData", {
             method: 'POST',
             body: JSON.stringify(item),
             headers: {
@@ -109,7 +109,7 @@ $(document).ready(function ($) {
     function processJson() {
         $.ajax({
             type: 'GET',
-            url: 'AcceptRequest',
+            url: 'http://localhost:3000/Testing/AcceptRequest',
             dataType: 'json',
             timeout: 30000,
             success: function (data) {

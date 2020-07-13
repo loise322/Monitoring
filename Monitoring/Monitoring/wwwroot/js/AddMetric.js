@@ -7,7 +7,7 @@
         Priority: Number(document.getElementById('addPriorityInput').value),
         Kind: document.getElementById('addKindInput').value
     };
-    var response = await fetch("http://localhost:3000/Home/AddMetric", {
+    var response = await fetch("http://localhost:3000/Server/AddMetric", {
         method: 'POST',
         body: JSON.stringify(item),
         headers: {

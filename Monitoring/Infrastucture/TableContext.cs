@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.EntityFrameworkCore;
+using ApplicationCore.Models;
 
-namespace Monitoring.Models
+namespace Infrastructure
 {
     /// <summary>
     ///  Контекст данных - класс, унаследованный от класса Microsoft.EntityFrameworkCore.DbContext. Используется

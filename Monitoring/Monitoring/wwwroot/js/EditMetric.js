@@ -8,7 +8,7 @@
         Priority: Number(document.getElementById('editPriorityInput').value),
         Kind: document.getElementById('editKindInput').value
     };
-    var response = await fetch("http://localhost:3000/Home/EditMetric", {
+    var response = await fetch("http://localhost:3000/Server/EditMetric", {
         method: 'POST',
         body: JSON.stringify(item),
         headers: {

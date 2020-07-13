@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Monitoring.Models;
 using Monitoring.ViewModels;
 using Newtonsoft.Json;
 using NLog;
+using ApplicationCore.Models;
 
-namespace Monitoring.Classes
+namespace Monitoring.Services
 {
     /// <summary>
     /// Используется для сериализации и десереализации данных.
     /// </summary>
-    public class DataConverter
+    public class DataConverter : IDataConverter
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         /// <summary>

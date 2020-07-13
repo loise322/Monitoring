@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Monitoring.Validators
+namespace ApplicationCore.Validators
 {
     /// <summary>
     /// Перечисление типов валидации.

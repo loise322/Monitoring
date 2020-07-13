@@ -2,7 +2,7 @@
     var timeFormat = 'mm/DD/yyyy HH:mm';
     $.ajax({
         type: 'GET',
-        url: "http://localhost:3000/Home/DataForGraphic/" + id,
+        url: "http://localhost:3000/Server/GetDataForGraphic/" + id,
         timeout: 10000,
         success: function (data) {
             console.log(data);
@@ -46,7 +46,7 @@
                             time: {
                                 parser: 'MM/DD/YYYY HH:mm',
                                 tooltipFormat: 'll HH:mm',
-                                unit: 'minute',
+                                unit: 'hour',
                                 unitStepSize: 1,
                             },
                             scaleLabel: {

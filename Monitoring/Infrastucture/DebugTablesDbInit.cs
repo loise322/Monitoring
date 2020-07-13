@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using Monitoring.Models;
 
-namespace Monitoring
+namespace Infrastructure
 {
     /// <summary>
     /// Класс DebugTablesDbInit используется для инициализации базы данных при первом обращении к ней.
