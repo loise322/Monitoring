@@ -97,7 +97,7 @@ $(document).ready(function ($) {
     };
 
     function processData(item) {
-        fetch("http://localhost:3000/Metric/ProcessData", {
+        fetch("http://localhost:3000/Server/ProcessData", {
             method: 'POST',
             body: JSON.stringify(item),
             headers: {

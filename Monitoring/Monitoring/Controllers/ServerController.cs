@@ -13,18 +13,20 @@ using NLog;
 
 namespace Monitoring.Controllers
 {
-    public class MetricController : Controller
+    public class ServerController : Controller
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private readonly IProcessingData _processingData;
         private readonly IWorkWithData _workWithData;
+        private readonly IProcessingGraphic _processingGraphic;
         private readonly IStringValidator _stringValidator;
         private readonly IDataConverter _jsonConverters;
 
-        public MetricController(IWorkWithData workWithData, IProcessingData processingData, IStringValidator stringValidator, IDataConverter jsonConverters)
+        public ServerController(IWorkWithData workWithData, IProcessingData processingData, IProcessingGraphic processingGraphic, IStringValidator stringValidator, IDataConverter jsonConverters)
         {
             _workWithData = workWithData;
             _processingData = processingData;
+            _processingGraphic = processingGraphic;
             _stringValidator = stringValidator;
             _jsonConverters = jsonConverters;
         }
@@ -73,6 +75,17 @@ namespace Monitoring.Controllers
                 return Ok();
             }
             return BadRequest(validationErrors);
+        }
+
+        /// <summary>
+        /// Отправки данных, с помощью которые строится график.
+        /// </summary>
+        /// <param name="id">Указывает на метрику, график которой нужно построить</param>
+        /// <returns>Возвращает JSON массив данных</returns>
+        [HttpGet]
+        public IActionResult GetDataForGraphic(int id)
+        {
+            return Json(_processingGraphic.SetDataGraphic(id));
         }
 
         /// <summary>

@@ -7,7 +7,7 @@
         Priority: Number(document.getElementById('addPriorityInput').value),
         Kind: document.getElementById('addKindInput').value
     };
-    var response = await fetch("http://localhost:3000/Metric/AddMetric", {
+    var response = await fetch("http://localhost:3000/Server/AddMetric", {
         method: 'POST',
         body: JSON.stringify(item),
         headers: {
@@ -16,7 +16,7 @@
     });
     if (response.ok) {
         alert("Метрика добавлена!");
-        document.location.href = 'http://localhost:3000/View/Metrics'
+        document.location.href = 'http://localhost:3000/Home/Metrics'
     } else {
         if (response.status == "400") {
             let text = await response.text();
