@@ -16,14 +16,14 @@ using ApplicationCore.Validators;
 
 namespace Monitoring.Controllers
 {
-    public class HomeController : Controller
+    public class ViewController : Controller
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private readonly IWorkWithData _workWithData;
         private readonly IProcessingViewModels _processingViewModels;
         private readonly TableContext _db;
 
-        public HomeController(TableContext context, IWorkWithData workWithData, IProcessingViewModels processingViewModels)
+        public ViewController(TableContext context, IWorkWithData workWithData, IProcessingViewModels processingViewModels)
         {
             _db = context;
             _workWithData = workWithData;
@@ -78,7 +78,7 @@ namespace Monitoring.Controllers
         public IActionResult Delete(int id)
         {
             _workWithData.DeleteMetric(id);
-            return Redirect("/Home/Metrics");
+            return Redirect("/View/Metrics");
         }
 
         /// <summary>

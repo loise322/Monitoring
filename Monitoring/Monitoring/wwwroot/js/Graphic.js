@@ -2,7 +2,7 @@
     var timeFormat = 'mm/DD/yyyy HH:mm';
     $.ajax({
         type: 'GET',
-        url: "http://localhost:3000/Server/GetDataForGraphic/" + id,
+        url: "http://localhost:3000/Graphic/GetDataForGraphic/" + id,
         timeout: 10000,
         success: function (data) {
             console.log(data);
