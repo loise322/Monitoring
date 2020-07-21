@@ -31,15 +31,17 @@ body {
   display: -ms-flexbox;
   display: flex;
 }
-.col-my:first-child {
-    -webkit-box-flex: 2;
-    -ms-flex: 2;
-    flex: 2;
-}
+
 .col-my {
   -webkit-box-flex: 2;
       -ms-flex: 2;
           flex: 2;
+}
+
+.tool-col {
+    -webkit-box-flex: 1;
+       -ms-flex: 1;
+           flex: 1;
 }
 
 .table-head {
@@ -116,8 +118,7 @@ body {
 }
 
 .searchbox {
-    display: flex;
-    width: 75%;
+    width: 50%;
     height: calc(1.5em + .75rem + 2px);
     padding: .375rem .75rem;
     font-size: 1rem;
@@ -132,7 +133,7 @@ body {
 
 .btn {
     display: flex;
-    width: 25%;
+    width: 100px;
     float: right;
 }
 

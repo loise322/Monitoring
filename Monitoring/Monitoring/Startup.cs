@@ -44,7 +44,7 @@ namespace Monitoring
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action}/{id?}");
+                    pattern: "{controller=View}/{action=Metrics}/{id?}");
             });
         }
     }

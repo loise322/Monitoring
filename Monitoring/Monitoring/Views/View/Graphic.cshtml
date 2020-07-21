@@ -13,12 +13,15 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/Chart.bundle.min.js"></script>
     <script src="~/js/Graphic.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
 </head>
 <body>
     @if (Model != null)
     {
         <div style="width: 600px; height: 600px;"><canvas id="myChart" width="400" height="400"></canvas></div>
-        <button type="button" id="btnBack" onclick="location.href='@Url.Action("Metrics", "View")'">Back to Metrics</button>
+        <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Metrics", "View")'">Back</button>
         <script>
             getData(@Model.MetricId);
         </script>
@@ -27,5 +30,9 @@
     {
         <p>Метрики с данным идентификатором не существует!</p>
     }
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/7e6d09d347.js"></script>
 </body>
 </html>

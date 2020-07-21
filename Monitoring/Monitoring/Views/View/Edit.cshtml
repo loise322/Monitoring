@@ -57,7 +57,7 @@
             <form class="needs-validation" novalidate="">
                 <div class="mb-3">
                     <label for="editNameInput">Name</label>
-                    <input type="text" class="form-control" id="editNameInput" value="">
+                    <input type="text" class="form-control" id="editNameInput" value="@Model.Name">
                 </div>
                 <div class="mb-3">
                     <label for="username">IsBoolean</label>
@@ -72,11 +72,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="editWarningThresholdInput">WarningThreshold</label>
-                    <input type="text" class="form-control" id="editWarningThresholdInput" value="">
+                    <input type="text" class="form-control" id="editWarningThresholdInput" value="@Model.WarningThreshold">
                 </div>
                 <div class="mb-3">
                     <label for="editAlarmThresholdInput">AlarmThreshold</label>
-                    <input type="text" class="form-control" id="editAlarmThresholdInput" value="">
+                    <input type="text" class="form-control" id="editAlarmThresholdInput" value="@Model.AlarmThreshold">
                 </div>
                 <div class="mb-3">
                     <label for="editPriorityInput">Priority</label>
@@ -89,10 +89,10 @@
                 </div>
                 <div class="mb-3">
                     <label for="editKindInput">Kind</label>
-                    <input type="text" class="form-control" id="editKindInput" value="">
+                    <input type="text" class="form-control" id="editKindInput" value="@Model.Kind">
                 </div>
                 <div>
-                    <button class="btn btn-primary btn-sm" type="button" onclick="processEdit()">Edit</button>
+                    <button class="btn btn-primary btn-sm" type="button" onclick="processEdit()">Save</button>
                     <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Metrics", "View")'">Back</button>
                 </div>
             </form>
