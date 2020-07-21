@@ -8,7 +8,7 @@ using Monitoring.ViewModels;
 
 namespace Monitoring.Services
 {
-    public interface IWorkWithData
+    public interface IMetricService
     {
         void DeleteMetric(int id);
 

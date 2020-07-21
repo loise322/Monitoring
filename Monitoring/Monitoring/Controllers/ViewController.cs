@@ -16,17 +16,17 @@ using ApplicationCore.Validators;
 
 namespace Monitoring.Controllers
 {
-    public class HomeController : Controller
+    public class ViewController : Controller
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly IWorkWithData _workWithData;
+        private readonly IMetricService _metricService;
         private readonly IProcessingViewModels _processingViewModels;
         private readonly TableContext _db;
 
-        public HomeController(TableContext context, IWorkWithData workWithData, IProcessingViewModels processingViewModels)
+        public ViewController(TableContext context, IMetricService metricService, IProcessingViewModels processingViewModels)
         {
             _db = context;
-            _workWithData = workWithData;
+            _metricService = metricService;
             _processingViewModels = processingViewModels;
         }
 
@@ -77,8 +77,8 @@ namespace Monitoring.Controllers
         /// <param name="id">Указывает на метрику, которую нужно удалить.</param>
         public IActionResult Delete(int id)
         {
-            _workWithData.DeleteMetric(id);
-            return Redirect("/Home/Metrics");
+            _metricService.DeleteMetric(id);
+            return Redirect("/View/Metrics");
         }
 
         /// <summary>

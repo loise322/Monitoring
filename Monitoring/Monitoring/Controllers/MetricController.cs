@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using ApplicationCore.Models;
 using ApplicationCore.Validators;
-using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Monitoring.Services;
 using Monitoring.ViewModels;
@@ -13,21 +9,17 @@ using NLog;
 
 namespace Monitoring.Controllers
 {
-    public class ServerController : Controller
+    public class MetricController : Controller
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private readonly IProcessingData _processingData;
-        private readonly IWorkWithData _workWithData;
-        private readonly IProcessingGraphic _processingGraphic;
-        private readonly IStringValidator _stringValidator;
+        private readonly IMetricService _metricService;
         private readonly IDataConverter _jsonConverters;
 
-        public ServerController(IWorkWithData workWithData, IProcessingData processingData, IProcessingGraphic processingGraphic, IStringValidator stringValidator, IDataConverter jsonConverters)
+        public MetricController(IMetricService metricService, IProcessingData processingData, IDataConverter jsonConverters)
         {
-            _workWithData = workWithData;
+            _metricService = metricService;
             _processingData = processingData;
-            _processingGraphic = processingGraphic;
-            _stringValidator = stringValidator;
             _jsonConverters = jsonConverters;
         }
 
@@ -39,15 +31,16 @@ namespace Monitoring.Controllers
         [HttpPost]
         public IActionResult EditMetric([FromBody]JsonElement data)
         {
+            Validators _validators = new Validators();
             MetricItem dataForEdit = _jsonConverters.DeserializeMetric(data);
             if (dataForEdit == null)
             {
                 return BadRequest("Произошла ошибка при десериализации!");
             }
-            string validationErrors = _stringValidator.ValidateStrings(_stringValidator.SetValidationData(dataForEdit));
+            string validationErrors = _validators.ValidateAll(_validators.SetValidationData(dataForEdit));
             if (validationErrors.Count() == 0)
             {
-                _workWithData.EditMetric(dataForEdit);
+                _metricService.EditMetric(dataForEdit);
                 logger.Info("Changes saved!");
                 return Ok();
             }
@@ -63,29 +56,19 @@ namespace Monitoring.Controllers
         public IActionResult AddMetric([FromBody]JsonElement data)
         {
             MetricItem dataForAdd = _jsonConverters.DeserializeMetric(data);
+            Validators _validators = new Validators();
             if (dataForAdd == null)
             {
                 return BadRequest("Произошла ошибка при десериализации данных!");
             }
-            string validationErrors = _stringValidator.ValidateStrings(_stringValidator.SetValidationData(dataForAdd));
+            string validationErrors = _validators.ValidateAll(_validators.SetValidationData(dataForAdd));
             if (validationErrors.Count() == 0)
             {
-                _workWithData.AddMetric(dataForAdd);
+                _metricService.AddMetric(dataForAdd);
                 logger.Info($"Metric added! {dataForAdd}");
                 return Ok();
             }
             return BadRequest(validationErrors);
-        }
-
-        /// <summary>
-        /// Отправки данных, с помощью которые строится график.
-        /// </summary>
-        /// <param name="id">Указывает на метрику, график которой нужно построить</param>
-        /// <returns>Возвращает JSON массив данных</returns>
-        [HttpGet]
-        public IActionResult GetDataForGraphic(int id)
-        {
-            return Json(_processingGraphic.SetDataGraphic(id));
         }
 
         /// <summary>
