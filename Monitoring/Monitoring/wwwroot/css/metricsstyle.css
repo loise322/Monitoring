@@ -32,14 +32,14 @@ body {
   display: flex;
 }
 .col-my:first-child {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
+    -webkit-box-flex: 2;
+    -ms-flex: 2;
     flex: 2;
 }
 .col-my {
-  -webkit-box-flex: 3;
-      -ms-flex: 3;
-          flex: 3;
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
 }
 
 .table-head {
@@ -95,7 +95,7 @@ body {
 
 .col__title {
   padding: 20px 0;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -116,8 +116,8 @@ body {
 }
 
 .searchbox {
-    display: block;
-    width: 100%;
+    display: flex;
+    width: 75%;
     height: calc(1.5em + .75rem + 2px);
     padding: .375rem .75rem;
     font-size: 1rem;
@@ -128,6 +128,12 @@ body {
     background-clip: padding-box;
     border: 1px solid #ced4da;
     border-radius: .25rem;
+}
+
+.btn {
+    display: flex;
+    width: 25%;
+    float: right;
 }
 
 .form-active {

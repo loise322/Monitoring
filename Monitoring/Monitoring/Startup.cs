@@ -24,11 +24,10 @@ namespace Monitoring
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<TableContext>(options => options.UseSqlServer(connection));
-            services.AddScoped<IWorkWithData, WorkWithData>();
+            services.AddScoped<IMetricService, WorkWithData>();
             services.AddScoped<IProcessingData, ProcessingData>();
-            services.AddScoped<IProcessingGraphic, ProcessingGraphic>();
+            services.AddScoped<IGraphicService, GraphicService>();
             services.AddScoped<IProcessingViewModels, ProcessingViewModels>();
-            services.AddScoped<IStringValidator, StringValidator>();
             services.AddScoped<IDataConverter, DataConverter>();
             services.AddScoped<ITestingApp, TestingApp>();
             services.AddControllersWithViews();

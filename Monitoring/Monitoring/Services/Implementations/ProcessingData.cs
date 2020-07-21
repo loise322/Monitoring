@@ -13,9 +13,9 @@ namespace Monitoring.Services
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private readonly TableContext _db;
-        private readonly IWorkWithData _workWithData;
+        private readonly IMetricService _workWithData;
 
-        public ProcessingData(TableContext db, IWorkWithData workWithData)
+        public ProcessingData(TableContext db, IMetricService workWithData)
         {
             _db = db;
             _workWithData = workWithData;
