@@ -21,7 +21,9 @@
         <main>
             <div class="container-my">
                 <article class="content">
+                    <h4 class="nav-title">Таблица метрик</h4>
                     <div>
+                        <button type="button" class="btn btn-dark" onclick="location.href='@Url.Action("Add", "View")'">Add</button>
                         <input class="searchbox" id="inputSearch" type="text" placeholder="Введите название метрики...">
                     </div>
                     <div class="table">
@@ -33,9 +35,8 @@
                                 <div class="col-my table-col col__title">AlarmThreshold</div>
                                 <div class="col-my table-col col__title">Priority</div>
                                 <div class="col-my table-col col__title">Kind</div>
-                                <div class="col-my table-col col__title">
-                                    <button type="button" class="btn btn-dark" onclick="location.href='@Url.Action("Add", "View")'">Add</button>
-                                </div>
+                                <div class="col-my table-col col__title"></div>
+                                <div class="col-my table-col col__title delete-col"></div>
                             </div>
                         </div>
                         <div id="tableBody" class="row-my table-body">
@@ -58,6 +59,8 @@
                                     <div class="col-my table-col">
                                         @Html.ActionLink("Graphic", "Graphic", "View", new { id = i.Id })
                                         @Html.ActionLink("Edit", "Edit", "View", new { id = i.Id })
+                                    </div>
+                                    <div class="col-my table-col delete-col">
                                         @Html.ActionLink("Delete", "Delete", "View", new { id = i.Id })
                                     </div>
                                 </div>

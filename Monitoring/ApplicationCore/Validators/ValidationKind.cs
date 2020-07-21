@@ -10,6 +10,7 @@ namespace ApplicationCore.Validators
     /// </summary>
     public enum ValidationKind
     {
-        MaxLength
+        MaxLength,
+        Thresholds
     }
 }
