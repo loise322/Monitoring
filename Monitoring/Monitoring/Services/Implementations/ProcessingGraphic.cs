@@ -8,16 +8,16 @@ using Monitoring.ViewModels;
 
 namespace Monitoring.Services
 {
-    public class GraphicService : IGraphicService
+    public class ProcessingGraphic : IProcessingGraphic
     {
         private readonly TableContext _db;
 
-        public GraphicService(TableContext db)
+        public ProcessingGraphic(TableContext db)
         {
             _db = db;
         }
 
-        public GraphicModel BuildDataGraphic(int id)
+        public GraphicModel SetDataGraphic(int id)
         {
             var logsOfMetric = _db.Logs.Where(i => i.MetricId == id).ToList();
             var allValues = logsOfMetric.Select(i => i.Value);

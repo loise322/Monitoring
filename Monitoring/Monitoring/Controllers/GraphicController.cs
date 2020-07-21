@@ -9,11 +9,11 @@ namespace Monitoring.Controllers
 {
     public class GraphicController : Controller
     {
-        private readonly IGraphicService _graphicService;
+        private readonly IProcessingGraphic _processingGraphic;
 
-        public GraphicController (IGraphicService graphicService)
+        public GraphicController (IProcessingGraphic processingGraphic)
         {
-            _graphicService = graphicService;
+            _processingGraphic = processingGraphic;
         }
         /// <summary>
         /// Отправки данных, с помощью которые строится график.
@@ -23,7 +23,7 @@ namespace Monitoring.Controllers
         [HttpGet]
         public IActionResult GetDataForGraphic(int id)
         {
-            return Json(_graphicService.BuildDataGraphic(id));
+            return Json(_processingGraphic.SetDataGraphic(id));
         }
     }
 }

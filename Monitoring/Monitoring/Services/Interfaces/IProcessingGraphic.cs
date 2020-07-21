@@ -6,8 +6,8 @@ using Monitoring.ViewModels;
 
 namespace Monitoring.Services
 { 
-    public interface IGraphicService
+    public interface IProcessingGraphic
     {
-        GraphicModel BuildDataGraphic(int id);
+        GraphicModel SetDataGraphic(int id);
     }
 }

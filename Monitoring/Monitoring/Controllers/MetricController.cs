@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using ApplicationCore.Models;
 using ApplicationCore.Validators;
+using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Monitoring.Services;
 using Monitoring.ViewModels;
@@ -13,13 +17,15 @@ namespace Monitoring.Controllers
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private readonly IProcessingData _processingData;
-        private readonly IMetricService _metricService;
+        private readonly IWorkWithData _workWithData;
+        private readonly IStringValidator _stringValidator;
         private readonly IDataConverter _jsonConverters;
 
-        public MetricController(IMetricService metricService, IProcessingData processingData, IDataConverter jsonConverters)
+        public MetricController(IWorkWithData workWithData, IProcessingData processingData, IStringValidator stringValidator, IDataConverter jsonConverters)
         {
-            _metricService = metricService;
+            _workWithData = workWithData;
             _processingData = processingData;
+            _stringValidator = stringValidator;
             _jsonConverters = jsonConverters;
         }
 
@@ -31,16 +37,15 @@ namespace Monitoring.Controllers
         [HttpPost]
         public IActionResult EditMetric([FromBody]JsonElement data)
         {
-            Validators _validators = new Validators();
             MetricItem dataForEdit = _jsonConverters.DeserializeMetric(data);
             if (dataForEdit == null)
             {
                 return BadRequest("Произошла ошибка при десериализации!");
             }
-            string validationErrors = _validators.ValidateAll(_validators.SetValidationData(dataForEdit));
+            string validationErrors = _stringValidator.ValidateStrings(_stringValidator.SetValidationData(dataForEdit));
             if (validationErrors.Count() == 0)
             {
-                _metricService.EditMetric(dataForEdit);
+                _workWithData.EditMetric(dataForEdit);
                 logger.Info("Changes saved!");
                 return Ok();
             }
@@ -56,15 +61,14 @@ namespace Monitoring.Controllers
         public IActionResult AddMetric([FromBody]JsonElement data)
         {
             MetricItem dataForAdd = _jsonConverters.DeserializeMetric(data);
-            Validators _validators = new Validators();
             if (dataForAdd == null)
             {
                 return BadRequest("Произошла ошибка при десериализации данных!");
             }
-            string validationErrors = _validators.ValidateAll(_validators.SetValidationData(dataForAdd));
+            string validationErrors = _stringValidator.ValidateStrings(_stringValidator.SetValidationData(dataForAdd));
             if (validationErrors.Count() == 0)
             {
-                _metricService.AddMetric(dataForAdd);
+                _workWithData.AddMetric(dataForAdd);
                 logger.Info($"Metric added! {dataForAdd}");
                 return Ok();
             }

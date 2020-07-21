@@ -18,10 +18,6 @@ namespace ApplicationCore.Validators
         /// Значение строки.
         /// </summary>
         public string Value { get; set; }
-
-        public int WarningThreshold { get; set; }
-
-        public int AlarmThreshold { get; set; }
         /// <summary>
         /// Тип валидации, которую строка должна пройти.
         /// </summary>

@@ -19,14 +19,14 @@ namespace Monitoring.Controllers
     public class ViewController : Controller
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly IMetricService _metricService;
+        private readonly IWorkWithData _workWithData;
         private readonly IProcessingViewModels _processingViewModels;
         private readonly TableContext _db;
 
-        public ViewController(TableContext context, IMetricService metricService, IProcessingViewModels processingViewModels)
+        public ViewController(TableContext context, IWorkWithData workWithData, IProcessingViewModels processingViewModels)
         {
             _db = context;
-            _metricService = metricService;
+            _workWithData = workWithData;
             _processingViewModels = processingViewModels;
         }
 
@@ -77,7 +77,7 @@ namespace Monitoring.Controllers
         /// <param name="id">Указывает на метрику, которую нужно удалить.</param>
         public IActionResult Delete(int id)
         {
-            _metricService.DeleteMetric(id);
+            _workWithData.DeleteMetric(id);
             return Redirect("/View/Metrics");
         }
 
