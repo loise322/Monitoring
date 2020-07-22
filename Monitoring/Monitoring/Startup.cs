@@ -7,6 +7,8 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Monitoring.Services;
 using ApplicationCore.Validators;
+using MassTransit;
+using GreenPipes;
 
 namespace Monitoring
 {
@@ -22,6 +24,27 @@ namespace Monitoring
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<MetricItemConsumer>();
+
+                x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+                {
+                    // configure health checks for this bus instance
+                    cfg.UseHealthCheck(provider);
+
+                    cfg.Host("rabbitmq://localhost");
+
+                    cfg.ReceiveEndpoint("order-queue", ep =>
+                    {
+                        ep.PrefetchCount = 16;
+                        ep.UseMessageRetry(r => r.Interval(2, 100));
+
+                        ep.ConfigureConsumer<MetricItemConsumer>(provider);
+                    });
+                }));
+            });
+            services.AddMassTransitHostedService();
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<TableContext>(options => options.UseSqlServer(connection));
             services.AddScoped<IMetricService, WorkWithData>();
