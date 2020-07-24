@@ -7,29 +7,30 @@ using ApplicationCore.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Monitoring.ViewModels;
 using Newtonsoft.Json;
+using TestRabbitMq.Models;
 
-namespace TestRabbitMqProducer.Controllers
+namespace TestRabbitMq.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CheckController : ControllerBase
+    public class RabbitController : ControllerBase
     {
         private readonly IBusControl _bus;
 
-        public CheckController(IBusControl bus)
+        public RabbitController(IBusControl bus)
         {
             _bus = bus;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody]JsonElement data)
+        public async Task<IActionResult> PostAsync(List<TestDataJson> metric)
         {
-            var metric = JsonConvert.DeserializeObject<MetricItem>(data.ToString());
-            Uri uri = new Uri("rabbitmq://localhost/order-queue");
+            Uri uri = new Uri("rabbitmq://localhost/test-data-json");
 
             var endPoint = await _bus.GetSendEndpoint(uri);
-            await endPoint.Send(metric);
+            await endPoint.Send(metric.ToArray());
 
             return Ok("Success");
         }

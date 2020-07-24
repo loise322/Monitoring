@@ -9,6 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Infrastructure;
 using NLog;
+using MassTransit;
+using GreenPipes;
+using Monitoring.Services;
 
 namespace Monitoring
 {
@@ -39,6 +42,41 @@ namespace Monitoring
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    // Add MassTransit to the service collection and configure service collection
+                    services.AddMassTransit(cfg =>
+                    {
+                        // Add bus to the collection
+                        cfg.AddBus(ConfigureBus);
+                        // Add consumer to the collection
+                        cfg.AddConsumer<MetricItemConsumer>();
+                    });
+
+                    // Add IHostedService registration of type BusService
+                    services.AddHostedService<BusService>();
                 });
+
+        private static IBusControl ConfigureBus(IServiceProvider provider)
+        {
+            return Bus.Factory.CreateUsingRabbitMq(cfg =>
+            {
+                cfg.Host("localhost", "/", h => {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+
+                cfg.ReceiveEndpoint("test-data-json", e =>
+                {
+                    e.PrefetchCount = 16;
+
+                    e.UseMessageRetry(x => x.Interval(2, 100));
+
+                    e.Consumer<MetricItemConsumer>(provider);
+                });
+            });
+            
+        }
     }
 }

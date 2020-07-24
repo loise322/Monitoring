@@ -9,6 +9,8 @@ using Monitoring.Services;
 using ApplicationCore.Validators;
 using MassTransit;
 using GreenPipes;
+using System.Threading;
+using System;
 
 namespace Monitoring
 {
@@ -22,38 +24,17 @@ namespace Monitoring
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMassTransit(x =>
-            {
-                x.AddConsumer<MetricItemConsumer>();
-
-                x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
-                {
-                    // configure health checks for this bus instance
-                    cfg.UseHealthCheck(provider);
-
-                    cfg.Host("rabbitmq://localhost");
-
-                    cfg.ReceiveEndpoint("order-queue", ep =>
-                    {
-                        ep.PrefetchCount = 16;
-                        ep.UseMessageRetry(r => r.Interval(2, 100));
-
-                        ep.ConfigureConsumer<MetricItemConsumer>(provider);
-                    });
-                }));
-            });
-            services.AddMassTransitHostedService();
+        public  void ConfigureServices(IServiceCollection services)
+        {          
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<TableContext>(options => options.UseSqlServer(connection));
-            services.AddScoped<IMetricService, WorkWithData>();
+            services.AddScoped<IMetricService, MetricService>();
             services.AddScoped<IProcessingData, ProcessingData>();
             services.AddScoped<IGraphicService, GraphicService>();
             services.AddScoped<IProcessingViewModels, ProcessingViewModels>();
             services.AddScoped<IDataConverter, DataConverter>();
             services.AddScoped<ITestingApp, TestingApp>();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews();      
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +43,6 @@ namespace Monitoring
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
