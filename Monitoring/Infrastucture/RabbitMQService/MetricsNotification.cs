@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Monitoring.ViewModels;
 
-namespace Monitoring.Services
+namespace Infrastucture.RabbitMQService
 {
     public class MetricsNotification
     {
@@ -16,6 +15,6 @@ namespace Monitoring.Services
 
         public DateTime TimestampUtc { get; set; }
 
-        public TestDataJson[] Metrics { get; set; }
+        public PreparedMetrics[] Metrics { get; set; }
     }
 }

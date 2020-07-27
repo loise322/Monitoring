@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ApplicationCore.Models;
 using MassTransit;
 
 namespace TestRabbitMqConsole
@@ -32,19 +33,7 @@ namespace TestRabbitMqConsole
             {
                 Console.WriteLine("Bus was started.");
 
-                var endpoint = await busControl.GetSendEndpoint(new Uri("exchange:account-service"));
-
-                await endpoint.Send<TestDataJson>(new
-                {
-                   Id = 0,
-                   Name = "TestRabbit",
-                   IsBoolean = false,
-                   WarningThreshold = 20,
-                   AlarmThreshold = 30,
-                   Priority = 1,
-                   Kind = "testRabbit",
-                   Value = 25
-                });
+              
             }
             finally
             {

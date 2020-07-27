@@ -3,19 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Models;
+using Infrastructure;
+using Infrastucture.RabbitMQService;
 using MassTransit;
+using Monitoring.Services;
 using Monitoring.ViewModels;
 using NLog;
 
 namespace Monitoring
 {
-    public class MetricItemConsumer : IConsumer<TestDataJson[]>
+    public class MetricItemConsumer : IConsumer<MetricsNotification>
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-        public async Task Consume(ConsumeContext<TestDataJson[]> context)
+        private readonly IProcessingData _processingData;
+
+        public MetricItemConsumer(IProcessingData processingData) 
         {
+            _processingData = processingData;
+        }
+
+        public async Task Consume(ConsumeContext<MetricsNotification> context)
+        {             
             var data = context.Message;
-            logger.Info($"Пришли данные с RabbitMq: {context.Message}");
+            _processingData.StartProcessingData(data.Metrics);
             await Task.CompletedTask;
         }
     }

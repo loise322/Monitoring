@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Hosting;
 
-namespace Monitoring.Services
+namespace Infrastucture.RabbitMQService
 {
     public class BusService : BackgroundService
     {

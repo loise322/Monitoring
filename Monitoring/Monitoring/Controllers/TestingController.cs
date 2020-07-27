@@ -20,19 +20,11 @@ namespace Monitoring.Controllers
         /// Источник данных для тестирования программы.
         /// </summary>
         /// <returns>Возвращает JSON данные в представление</returns>
+        [HttpGet]
         public IActionResult AcceptRequest()
         {
             return Json(_testingApp.CreateTestData());
         }
 
-        [HttpGet]
-        public IActionResult GetTestMetricsForRabbit()
-        {
-            var model = new MetricsModel
-            {
-                Metrics = _db.Metrics.ToList()
-            };
-            return Json(model);
-        }
     }
 }

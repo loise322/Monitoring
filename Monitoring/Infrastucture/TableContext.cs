@@ -21,6 +21,7 @@ namespace Infrastructure
         /// Представляет собой коллекцию объектов, которая сопоставляется с определенной таблицей в базе данных.
         /// </summary>
         public DbSet<MetricItem> Metrics { get; set; }
+
         /// <summary>
         /// С помощью вызова Database.EnsureCreated() по определению моделей будет создаваться база данных (если она отсутствует).
         /// </summary>
