@@ -19,22 +19,17 @@ namespace Monitoring.Services
 
         public GraphicModel BuildDataGraphic(int id)
         {
-            var logsOfMetric = _db.Logs.Where(i => i.MetricId == id).ToList();
-            var allValues = logsOfMetric.Select(i => i.Value);
-            var allDate = logsOfMetric.Select(i => i.Date.ToString("MM-dd-yyyy HH:mm"));
-            const int maxLength = 50;
+            const int minutes = 25;
+            var timestamp = _db.Logs.Where(i => i.MetricId == id).OrderByDescending(i => i.Id).Take(1).Select(i => i.Date).FirstOrDefault();
+            var logsOfMetric = _db.Logs.Where(i => (i.MetricId == id) && (i.Date >= timestamp.AddMinutes(-minutes))).ToList();
+            var values = logsOfMetric.Select(i => i.Value);
+            var dates = logsOfMetric.Select(i => i.Date.ToString("MM-dd-yyyy HH:mm"));
             var graphicModel = new GraphicModel()
             {
                 Name = _db.Metrics.Where(i => i.Id == id).Select(i => i.Name).First()
-            };
-            if (allValues.Count() > maxLength)
-            {
-                graphicModel.Values = allValues.TakeLast(maxLength);
-                graphicModel.Labels = allDate.TakeLast(maxLength);
-                return graphicModel;
-            }
-            graphicModel.Values = allValues.TakeLast(allValues.Count());
-            graphicModel.Labels = allDate.TakeLast(allValues.Count());
+            };            
+            graphicModel.Values = values;
+            graphicModel.Labels = dates;
             return graphicModel;
         }
     }

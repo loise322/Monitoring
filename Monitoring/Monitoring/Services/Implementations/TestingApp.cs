@@ -32,8 +32,8 @@ namespace Monitoring.Services
                     AlarmThreshold = item.AlarmThreshold,
                     Priority = item.Priority,
                     Kind = item.Kind,
-                    Value = _db.Logs.Where(i => i.MetricId == item.Id).ToList().Last().Value
-                });
+                    Value = _db.Logs.Where(i => i.MetricId == item.Id).OrderByDescending(i => i.Id).Take(1).Select(i => i.Value).FirstOrDefault()
+            });
             }
             return (new TestDataJsonList { Metrics = metricsWithValue });
         }
