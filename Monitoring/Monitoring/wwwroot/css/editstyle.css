@@ -9,6 +9,10 @@ body {
     font-family: "Roboto", sans-serif;
 }
 
+.head {
+    margin-top: 20px;
+}
+
 .row-my {
     width: 100%;
     display: -webkit-box;
@@ -84,3 +88,10 @@ body {
     color: #fff;
 }
 
+.btn {
+    margin-bottom: 10px;
+}
+
+.errormsg {
+    padding: 20px;
+}

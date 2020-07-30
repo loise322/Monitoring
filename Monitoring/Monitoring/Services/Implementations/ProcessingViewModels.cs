@@ -49,7 +49,11 @@ namespace Monitoring.Services
         {
             if (_db.Metrics.Select(i => i.Id).Contains(id))
             {
-                return new GraphicModel { MetricId = id };
+                if (_db.Logs.Select(i => i.MetricId).Contains(id))
+                {
+                    return new GraphicModel { MetricId = id };
+                }
+                return null;
             };
             return null;
         }

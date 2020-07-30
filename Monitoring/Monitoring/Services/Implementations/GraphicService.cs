@@ -27,7 +27,7 @@ namespace Monitoring.Services
             var graphicModel = new GraphicModel()
             {
                 Name = _db.Metrics.Where(i => i.Id == id).Select(i => i.Name).First()
-            };            
+            };
             graphicModel.Values = values;
             graphicModel.Labels = dates;
             return graphicModel;

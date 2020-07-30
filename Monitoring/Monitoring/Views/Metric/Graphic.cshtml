@@ -13,6 +13,7 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/Chart.bundle.min.js"></script>
     <script src="~/js/Graphic.js"></script>
+    <link href="~/css/graphicstyle.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
@@ -28,7 +29,7 @@
     }
     else
     {
-        <p>Метрики с данным идентификатором не существует!</p>
+        <div class="errormsg">Данной метрики не существует или не имеет логов!</div>
     }
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
