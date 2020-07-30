@@ -21,7 +21,7 @@
     @if (Model != null)
     {
         <div style="width: 600px; height: 600px;"><canvas id="myChart" width="400" height="400"></canvas></div>
-        <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Metrics", "View")'">Back</button>
+        <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Metrics", "Metric")'">Back</button>
         <script>
             getData(@Model.MetricId);
         </script>

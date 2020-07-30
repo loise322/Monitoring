@@ -24,8 +24,8 @@
                     <h4 class="nav-title">Таблица метрик</h4>
                     <div>
                         <input class="searchbox" id="inputSearch" type="text" placeholder="Введите название метрики...">
-                        <button type="button" class="btn btn-dark" onclick="location.href='@Url.Action("Add", "View")'">Add</button>
-                        <button type="button" class="btn btn-dark" onclick="location.href='@Url.Action("Index", "View")'">To UI</button>
+                        <button type="button" class="btn btn-dark" onclick="location.href='@Url.Action("Add", "Metric")'">Add</button>
+                        <button type="button" class="btn btn-dark" onclick="location.href='@Url.Action("Index", "Metric")'">To UI</button>
                     </div>
                     <div class="table">
                         <div class="row-my table-head">
@@ -59,13 +59,13 @@
                                     <div class="col-my table-col">@i.Priority</div>
                                     <div class="col-my table-col">@i.Kind </div>
                                     <div class="col-my table-col tool-col">
-                                        @Html.ActionLink("Edit", "Edit", "View", new { id = i.Id })
+                                        @Html.ActionLink("Edit", "Edit", "Metric", new { id = i.Id })
                                     </div>
                                     <div class="col-my table-col tool-col">
-                                        @Html.ActionLink("Graphic", "Graphic", "View", new { id = i.Id })
+                                        @Html.ActionLink("Graphic", "Graphic", "Metric", new { id = i.Id })
                                     </div>
                                     <div class="col-my table-col tool-col" onclick="return confirm('Вы желаете удалить данную метрику?')">
-                                        @Html.ActionLink("Delete", "Delete", "View", new { id = i.Id })
+                                        @Html.ActionLink("Delete", "Delete", "Metric", new { id = i.Id })
                                     </div>
                                 </div>
                             }
