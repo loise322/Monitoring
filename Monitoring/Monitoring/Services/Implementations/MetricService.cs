@@ -8,11 +8,11 @@ using Monitoring.ViewModels;
 
 namespace Monitoring.Services
 {
-    public class WorkWithData : IMetricService
+    public class MetricService : IMetricService
     {
         private readonly TableContext _db;
 
-        public WorkWithData(TableContext db)
+        public MetricService(TableContext db)
         {
             _db = db;
         }

@@ -24,7 +24,7 @@
     {
         <input type="hidden" id="editIdInput" value="@Model.Id" />
         <div class="col-md-8 order-md-1">
-            <h4 class="mb-3">Текущая метрика для редактирования:</h4>
+            <h4 class="mb-3 head">Текущая метрика для редактирования:</h4>
             <div class="table">
                 <div class="row-my table-head">
                     <div class="table-head-th">
@@ -57,7 +57,7 @@
             <form class="needs-validation" novalidate="">
                 <div class="mb-3">
                     <label for="editNameInput">Name</label>
-                    <input type="text" class="form-control" id="editNameInput" value="">
+                    <input type="text" class="form-control" id="editNameInput" value="@Model.Name">
                 </div>
                 <div class="mb-3">
                     <label for="username">IsBoolean</label>
@@ -72,11 +72,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="editWarningThresholdInput">WarningThreshold</label>
-                    <input type="text" class="form-control" id="editWarningThresholdInput" value="">
+                    <input type="text" class="form-control" id="editWarningThresholdInput" value="@Model.WarningThreshold">
                 </div>
                 <div class="mb-3">
                     <label for="editAlarmThresholdInput">AlarmThreshold</label>
-                    <input type="text" class="form-control" id="editAlarmThresholdInput" value="">
+                    <input type="text" class="form-control" id="editAlarmThresholdInput" value="@Model.AlarmThreshold">
                 </div>
                 <div class="mb-3">
                     <label for="editPriorityInput">Priority</label>
@@ -89,18 +89,18 @@
                 </div>
                 <div class="mb-3">
                     <label for="editKindInput">Kind</label>
-                    <input type="text" class="form-control" id="editKindInput" value="">
+                    <input type="text" class="form-control" id="editKindInput" value="@Model.Kind">
                 </div>
                 <div>
-                    <button class="btn btn-primary btn-sm" type="button" onclick="processEdit()">Edit</button>
-                    <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Metrics", "View")'">Back</button>
+                    <button class="btn btn-primary btn-sm" type="button" onclick="processEdit()">Save</button>
+                    <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Metrics", "Metric")'">Back</button>
                 </div>
             </form>
         </div>
     }
     else
     {
-        <p>Метрики с данным идентификатором не существует!</p>
+        <div class="errormsg">Метрики с данным идентификатором не существует!</div>
     }
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>

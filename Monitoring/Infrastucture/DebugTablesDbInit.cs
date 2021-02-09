@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ApplicationCore.Models;
 
 namespace Infrastructure
 {
@@ -15,7 +16,7 @@ namespace Infrastructure
         /// <param name="context">Контекст данных</param>
         public static void Initialize(TableContext context)
         {
-            
+           
         }
     }
 }

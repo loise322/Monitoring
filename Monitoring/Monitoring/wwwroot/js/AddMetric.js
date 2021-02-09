@@ -16,7 +16,7 @@
     });
     if (response.ok) {
         alert("Метрика добавлена!");
-        document.location.href = 'http://localhost:3000/View/Metrics'
+        document.location.href = 'http://localhost:3000/Metric/Metrics'
     } else {
         if (response.status == "400") {
             let text = await response.text();

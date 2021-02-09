@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+}
+
+@model GraphicModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/Chart.bundle.min.js"></script>
+    <script src="~/js/Graphic.js"></script>
+    <link href="~/css/graphicstyle.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+    @if (Model != null)
+    {
+        <div style="width: 600px; height: 600px;"><canvas id="myChart" width="400" height="400"></canvas></div>
+        <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Metrics", "Metric")'">Back</button>
+        <script>
+            getData(@Model.MetricId);
+        </script>
+    }
+    else
+    {
+        <div class="errormsg">Данной метрики не существует или не имеет логов!</div>
+    }
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/7e6d09d347.js"></script>
+</body>
+</html>

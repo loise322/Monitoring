@@ -46,7 +46,7 @@
                             time: {
                                 parser: 'MM/DD/YYYY HH:mm',
                                 tooltipFormat: 'll HH:mm',
-                                unit: 'hour',
+                                unit: 'minute',
                                 unitStepSize: 1,
                             },
                             scaleLabel: {

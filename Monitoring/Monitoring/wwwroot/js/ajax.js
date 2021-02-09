@@ -96,22 +96,48 @@ $(document).ready(function ($) {
         }
     };
 
-    function processData(item) {
-        fetch("http://localhost:3000/Metric/ProcessData", {
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function requestRequiredData(data) {
+        var response = await fetch("http://localhost:3000/api/rabbit", {
             method: 'POST',
-            body: JSON.stringify(item),
+            body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-    };
+        if (response.ok) {
+            console.log("Запрос за данными отправлен!");
+        } else {
+            console.log("Ошибка HTTP: " + response.status);
+        }
+    }
+
+    function createDataToRabbitMQ() {
+         $.ajax({
+            type: 'GET',
+            url: 'http://localhost:3000/Metric/CreateMetricRequiredNotification/',
+            dataType: 'json',
+            timeout: 30000,
+            success: function (data) {
+                requestRequiredData(data);      
+                setTimeout(processJson, 5000);
+                setTimeout(createDataToRabbitMQ, 30000);
+            },
+            error: function () {
+                console.log("Произошла ошибка CreateMetricRequiredNotification");
+                setTimeout(createDataToRabbitMQ, 30000);
+            }
+        });
+    }
 
     function processJson() {
         $.ajax({
             type: 'GET',
             url: 'http://localhost:3000/Testing/AcceptRequest',
             dataType: 'json',
-            timeout: 30000,
             success: function (data) {
                 var globalState = 0;
                 $.each(data.metrics, function (index, item) {
@@ -120,12 +146,10 @@ $(document).ready(function ($) {
                         globalState = itemState;
                     }
                 });
-                processData(data);
                 onGlobalStateChanged(lastGlobalState, globalState);
                 lastUpdateTimestamp = new Date();
                 $('#footer').text('Данные от ' + lastUpdateTimestamp.toLocaleString()).removeClass('error');
                 lastGlobalState = globalState;
-                setTimeout(processJson, 30000);
             },
             error: function () {
                 var errorText = 'Ошибка обновления данных';
@@ -133,10 +157,9 @@ $(document).ready(function ($) {
                     errorText += ', последние данные от ' + lastUpdateTimestamp.toLocaleString();
                 }
                 $('#footer').text(errorText).addClass('error');
-                setTimeout(processJson, 30000);
             }
         });
     };
     initialize();
-    processJson();
+    createDataToRabbitMQ()
 })

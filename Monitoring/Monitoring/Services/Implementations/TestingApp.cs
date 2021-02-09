@@ -19,34 +19,23 @@ namespace Monitoring.Services
 
         public TestDataJsonList CreateTestData()
         {
-            Random rnd = new Random();
-            if (_db.Metrics.Any())
+            var metricsWithoutValue = _db.Metrics.ToList();
+            var metricsWithValue = new List<TestDataJson>();
+            foreach (var item in metricsWithoutValue)
             {
-                var testDataJsonList = new TestDataJsonList();
-                var testDataJson = new List<TestDataJson>();
-                var metrics = _db.Metrics.ToList();
-                foreach (var item in metrics)
+                metricsWithValue.Add(new TestDataJson 
                 {
-                    testDataJson.Add(new TestDataJson { Name = item.Name, IsBoolean = item.IsBoolean, Priority = item.Priority, Kind = item.Kind, WarningThreshold = item.WarningThreshold, AlarmThreshold = item.AlarmThreshold, Value = rnd.Next(0, item.AlarmThreshold + (item.AlarmThreshold - item.WarningThreshold)) });
-                };
-                testDataJsonList.Metrics = testDataJson;
-                return testDataJsonList;
+                    Id = item.Id,
+                    Name = item.Name,
+                    IsBoolean = item.IsBoolean,
+                    WarningThreshold = item.WarningThreshold,
+                    AlarmThreshold = item.AlarmThreshold,
+                    Priority = item.Priority,
+                    Kind = item.Kind,
+                    Value = _db.Logs.Where(i => i.MetricId == item.Id).OrderByDescending(i => i.Id).Take(1).Select(i => i.Value).FirstOrDefault()
+            });
             }
-            else
-            {
-                var testDataJson = new List<TestDataJson>
-                {
-                    new TestDataJson { Name = "Name3", IsBoolean = false, WarningThreshold = 30, AlarmThreshold = 120, Priority = PriorityKind.Medium, Kind = "Kind3", Value = rnd.Next(0, 150) },
-                    new TestDataJson { Name = "Name2", IsBoolean = false, WarningThreshold = 60, AlarmThreshold = 90, Priority = PriorityKind.High, Kind = "Kind2", Value = rnd.Next(0, 120) },
-                    new TestDataJson { Name = "Name1", IsBoolean = false, WarningThreshold = 5, AlarmThreshold = 12, Priority = PriorityKind.Low, Kind = "Kind1", Value = rnd.Next(0, 30) },
-                    new TestDataJson { Name = "Name4", IsBoolean = false, WarningThreshold = 20, AlarmThreshold = 30, Priority = PriorityKind.High, Kind = "Kind4", Value = rnd.Next(0, 40) }
-                };
-                var testDataJsonList = new TestDataJsonList
-                {
-                    Metrics = testDataJson
-                };
-                return testDataJsonList;
-            }
+            return (new TestDataJsonList { Metrics = metricsWithValue });
         }
     }
 }

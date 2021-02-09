@@ -1,0 +1,52 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/metricsstyle.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/bootstrap-reboot.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="wrapper-my">
+        <main>
+            <div class="container-my">
+                <article class="content">
+                    <h4 class="nav-title">Таблица метрик</h4>
+                    <div>
+                        <input type="text" class="countData" id="countOfData" placeholder="Введите количество отправляемых метрик..." value="">
+                        <button type="button" class="btn btn-dark" onclick="createAndSendMessage()">Create and Send</button>
+                    </div>
+                    <div class="table">
+                        <div class="row-my table-head">
+                            <div class="table-head-th">
+                                <div class="col-my table-col col__title">Name</div>
+                                <div class="col-my table-col col__title">IsBoolean</div>
+                                <div class="col-my table-col col__title">WarningThreshold</div>
+                                <div class="col-my table-col col__title">AlarmThreshold</div>
+                                <div class="col-my table-col col__title">Priority</div>
+                                <div class="col-my table-col col__title">Kind</div>
+                                <div class="col-my table-col col__title">Value</div>
+                            </div>
+                        </div>
+                        <div id="tableBody" class="row-my table-body">
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/7e6d09d347.js"></script>
+    <script src="~/js/index.js"></script>
+</body>
+</html>
